@@ -1,17 +1,22 @@
+require('dotenv').config()
+
 const express = require("express")
 const app = express()
 const mongoose = require("mongoose")
 
-PORT=4000
-MONGO_URI='mongodb://admin:xpto123@ac-dxda1ok-shard-00-00.lyyrxwv.mongodb.net:27017,ac-dxda1ok-shard-00-01.lyyrxwv.mongodb.net:27017,ac-dxda1ok-shard-00-02.lyyrxwv.mongodb.net:27017/?ssl=true&replicaSet=atlas-lxm967-shard-0&authSource=admin&retryWrites=true&w=majority'
-
-
-mongoose.connect(MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true})
     .then(() => {
         console.log('Connected to Database')
-        app.listen(PORT, () => {
+        app.listen(process.env.PORT, () => {
             console.log("Server Started")
         })
     })
     .catch((error) => { console.log(error) })
 
+app.use(express.json())
+
+const usersRouter = require('./routes/users')
+const tipsRouter = require('./routes/tips')
+
+app.use('/users', usersRouter)
+app.use('/tips', tipsRouter)

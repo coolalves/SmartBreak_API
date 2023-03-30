@@ -1,10 +1,20 @@
 
-# POST http://localhost:4000/tips
+# POST http://localhost:4000/goals
 # Content-Type: application/json
 
 # {
-#     "type": "Monitor",
-#     "description": "test...5"
+#      "description": "test...9",
+#      "destination" : [5],
+#      "priority": 1,
+#      "date": "2023-06-23",
+#      "types": [ "Tablet"]
 # }
 
-GET http://localhost:4000/tips
+### 
+GET http://localhost:4000/goals
+
+###
+GET http://localhost:4000/goals/active
+
+###
+GET http://localhost:4000/goals/done

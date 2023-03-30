@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 })
 
 //GET ONE USER
-router.get('/:id', getUser, (req, res) => {
+router.get('/:id', getUser, async (req, res) => {
     res.send(res.user)
 })
 

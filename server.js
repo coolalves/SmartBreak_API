@@ -17,6 +17,8 @@ app.use(express.json())
 
 const usersRouter = require('./routes/users')
 const tipsRouter = require('./routes/tips')
+const goalsRouter = require('./routes/goals')
 
 app.use('/users', usersRouter)
 app.use('/tips', tipsRouter)
+app.use('/goals', goalsRouter)

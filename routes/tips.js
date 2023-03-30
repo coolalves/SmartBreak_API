@@ -28,18 +28,13 @@ router.post('/', async (req, res) => {
 
 //GET A SPECIFIC TIP
 router.get('/:type', async (req, res) => {
-    let response = []
     try {
-        const tips = await Tip.find()
-        tips.forEach(element => {
-            if (element.type == req.params.type) {
-                response.push(element)
-            }
-        });
-        res.json(response)
+        const tips = await Tip.find({type: req.params.type})
+        res.json(tips)
     } catch(err) {
         res.status(500).json({message: err.message})
     }
 })
+
 
 module.exports = router

@@ -37,8 +37,58 @@ router.post('/', async (req, res) => {
 })
 
 //UPDATE ONE USER
-router.patch('/:id', (req, res) => {
-
+router.patch('/:id', getUser, async (req, res) => {
+    if (req.body.name != null) {
+        res.user.name = req.body.name
+    }
+    if (req.body.surname != null) {
+        res.user.surname = req.body.surname
+    }
+    if (req.body.email != null) {
+        res.user.email = req.body.email
+    }
+    if (req.body.password != null) {
+        res.user.password = req.body.password
+    }
+    if (req.body.admin != null) {
+        res.user.admin = req.body.admin
+    }
+    if (req.body.battery != null) {
+        res.user.battery = req.body.battery
+    }
+    if (req.body.department != null) {
+        res.user.department = req.body.department
+    }
+    if (req.body.total_battery != null) {
+        res.user.total_battery = req.body.total_battery
+    }
+    if (req.body.pauses != null) {
+        res.user.pauses = req.body.pauses
+    }
+    if (req.body.routines != null) {
+        res.user.routines = req.body.routines
+    }
+    if (req.body.devices != null) {
+        res.user.devices = req.body.devices
+    }
+    if (req.body.rewards != null) {
+        res.user.rewards = req.body.rewards
+    }
+    if (req.body.acessibility != null) {
+        res.user.acessibility = req.body.acessibility
+    }
+    if (req.body.notifications != null) {
+        res.user.notifications = req.body.notifications
+    }
+    if (req.body.permissions != null) {
+        res.user.permissions = req.body.permissions
+    }
+    try {
+        const updatedUser = await res.user.save()
+        res.json(updatedUser)
+    } catch (err) {
+        res.status(400).json({message: err.message})
+    }
 })
 
 //DELETE ONE USER

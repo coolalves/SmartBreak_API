@@ -17,4 +17,6 @@ GET http://localhost:4000/goals
 GET http://localhost:4000/goals/active
 
 ###
-GET http://localhost:4000/goals/done
+GET http://localhost:4000/goals/destination=5
+###
+GET http://localhost:4000/goals/64256e82dfb5e16663b62c8c

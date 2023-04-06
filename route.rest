@@ -1,22 +1,18 @@
 
-# POST http://localhost:4000/goals
-# Content-Type: application/json
+PATCH http://localhost:4000/goals/642570d4ece7267df6d30b19
+Content-Type: application/json
 
-# {
-#      "description": "test...9",
-#      "destination" : [5],
-#      "priority": 1,
-#      "date": "2023-06-23",
-#      "types": [ "Tablet"]
-# }
+{
+    "priority": 2
+}
 
 ### 
+GET http://localhost:4000/users
+
+###
 GET http://localhost:4000/goals
 
 ###
-GET http://localhost:4000/goals/active
-
+GET http://localhost:4000/goals/filter=3
 ###
-GET http://localhost:4000/goals/destination=5
-###
-GET http://localhost:4000/goals/64256e82dfb5e16663b62c8c
+DELETE http://localhost:4000/goals/64256e67dfb5e16663b62c8a

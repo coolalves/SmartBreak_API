@@ -34,8 +34,30 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     let goals = []
     try {
+        if (req.params.id.includes("filter=")) { 
+            //TODO
+            const filter = req.params.id.substring(7)
+            // return data crescente
+            if (filter == 0) {
+                goals = await Goal.find().sort({date : 1})
+            }
+            // return data decrescente
+            else if (filter == 1) {
+                goals = await Goal.find().sort({date : -1})
+            }
+            // return prioridade crescente
+            else if (filter == 2) {
+                goals = await Goal.find().sort({priority : 1})
+            } 
+            // return prioridade decrescente
+            else if (filter == 3) {
+                goals = await Goal.find().sort({priority : -1})
+            } else {
+                return res.status(404).json({message: 'Cannot find filter'})
+            }
+        } 
         // get goals in progress 
-        if (req.params.id === "active") { 
+        else if (req.params.id === "active") { 
             goals = await Goal.find({active: true})
         }
         // get conclued goals
@@ -107,10 +129,8 @@ router.patch('/:id', async (req, res) => {
 //DELETE A SPECIFIC GOAL
 router.delete('/:id', async (req, res) => {
     try {
-        const goal = await Goal.findByIdAndRemove(req.params.id)
-        if (goal == null) {
-            return res.status(404).json({message: 'Cannot find goal'})
-        }
+        console.log(req.params.id)
+        await Goal.findByIdAndRemove(req.params.id)
         res.json({message : 'Goal Deleted'})
     } catch (err) {
         return res.status(500).json({message: err.message})

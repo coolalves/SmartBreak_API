@@ -33,27 +33,43 @@ router.post('/', async (req, res) => {
 //GET A SPECIFIC GOAL (DESTINATION) OR ACTIVE/DONE GOALS
 router.get('/:id', async (req, res) => {
     let goals = []
+    let filter,  destination
     try {
+        // goals/filter=x&destination=y
         if (req.params.id.includes("filter=")) { 
-            //TODO
-            const filter = req.params.id.substring(7)
-            // return data crescente
-            if (filter == 0) {
-                goals = await Goal.find().sort({date : 1})
+            if (req.params.id.includes("destination=")) { 
+                filter_field = req.params.id.substring(7,8)
+                destination_field = req.params.id.substring(21)
+
+                // find by destination
+                const elements = await Goal.find()
+                elements.forEach(element => {
+                    if (element.destination.includes(destination_field)) {
+                        goals.push(element)
+                    }
+                });
+                // return data crescente
+                if (filter_field == 0) {
+                    goals = goals.sort({date : 1})
+                }
+                // return data decrescente
+                else if (filter_field == 1) {
+                    goals = goals.sort({date : -1})
+                }
+                // return prioridade crescente
+                else if (filter_field == 2) {
+                    goals = goals.sort({priority : 1})
+                } 
+                // return prioridade decrescente
+                else if (filter_field == 3) {
+                    goals = goals.sort({priority : -1})
+                    console.log(goals)
+                } else {
+                    return res.status(404).json({message: 'Cannot find filter'})
+                }
             }
-            // return data decrescente
-            else if (filter == 1) {
-                goals = await Goal.find().sort({date : -1})
-            }
-            // return prioridade crescente
-            else if (filter == 2) {
-                goals = await Goal.find().sort({priority : 1})
-            } 
-            // return prioridade decrescente
-            else if (filter == 3) {
-                goals = await Goal.find().sort({priority : -1})
-            } else {
-                return res.status(404).json({message: 'Cannot find filter'})
+            else {
+                return res.status(404).json({message: 'Cannot find destination'})
             }
         } 
         // get goals in progress 

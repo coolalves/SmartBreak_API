@@ -13,6 +13,6 @@ GET http://localhost:4000/users
 GET http://localhost:4000/goals
 
 ###
-GET http://localhost:4000/goals/filter=3
+GET http://localhost:4000/goals/filter=3&destination=6
 ###
 DELETE http://localhost:4000/goals/64256e67dfb5e16663b62c8a

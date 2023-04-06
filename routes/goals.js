@@ -30,6 +30,27 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.get('/active', async (req, res) => {
+    try {
+        const goals = await Goal.find({ active: true })
+        res.json(goals)
+    } catch(err) {
+        res.status(500).json({message: err.message})
+    }
+})
+
+router.get('/inactive', async (req, res) => {
+    try {
+        const goals = await Goal.find({ active: false })
+        res.json(goals)
+    } catch(err) {
+        res.status(500).json({message: err.message})
+    }
+})
+
+
+
+
 //GET A SPECIFIC GOAL (DESTINATION) OR ACTIVE/DONE GOALS
 router.get('/:id', async (req, res) => {
     let goals = []

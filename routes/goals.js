@@ -30,6 +30,7 @@ router.post('/', async (req, res) => {
     }
 })
 
+// GET ACTIVE GOALS
 router.get('/active', async (req, res) => {
     try {
         const goals = await Goal.find({ active: true })
@@ -39,6 +40,7 @@ router.get('/active', async (req, res) => {
     }
 })
 
+// GET INACTIVE GOALS
 router.get('/inactive', async (req, res) => {
     try {
         const goals = await Goal.find({ active: false })
@@ -48,77 +50,62 @@ router.get('/inactive', async (req, res) => {
     }
 })
 
-
-
-
-//GET A SPECIFIC GOAL (DESTINATION) OR ACTIVE/DONE GOALS
-router.get('/:id', async (req, res) => {
-    let goals = []
-    let filter,  destination
+// GET USER_ID/DEPARTMENT_ID GOALS
+router.get('/destination/:id', async (req, res) => {
     try {
-        // goals/filter=x&destination=y
-        if (req.params.id.includes("filter=")) { 
-            if (req.params.id.includes("destination=")) { 
-                filter_field = req.params.id.substring(7,8)
-                destination_field = req.params.id.substring(21)
+        let goals =[]
+        const elements = await Goal.find()
+        elements.forEach(element => {
+            if (element.destination.includes(req.params.id)) {
+                goals.push(element)
+            }
+        });
+        res.json(goals)
+    } catch(err) {
+        res.status(500).json({message: err.message})
+    }
+})
 
-                // find by destination
-                const elements = await Goal.find()
-                elements.forEach(element => {
-                    if (element.destination.includes(destination_field)) {
-                        goals.push(element)
-                    }
-                });
-                // return data crescente
-                if (filter_field == 0) {
-                    goals = goals.sort({date : 1})
-                }
-                // return data decrescente
-                else if (filter_field == 1) {
-                    goals = goals.sort({date : -1})
-                }
-                // return prioridade crescente
-                else if (filter_field == 2) {
-                    goals = goals.sort({priority : 1})
-                } 
-                // return prioridade decrescente
-                else if (filter_field == 3) {
-                    goals = goals.sort({priority : -1})
-                    console.log(goals)
-                } else {
-                    return res.status(404).json({message: 'Cannot find filter'})
-                }
+// GET GOALS SORT BY FILTER
+router.get('/destination/:id/filter/:filter', async(req, res) => {
+    let filter = req.params.filter
+    let destination_id = req.params.id
+    let goals = []
+
+    try {
+        const elements = await Goal.find()
+        elements.forEach(element => {
+            if (element.destination.includes(destination_id)) {
+                goals.push(element)
             }
-            else {
-                return res.status(404).json({message: 'Cannot find destination'})
-            }
-        } 
-        // get goals in progress 
-        else if (req.params.id === "active") { 
-            goals = await Goal.find({active: true})
-        }
-        // get conclued goals
-        else if (req.params.id === "done") {
-            goals = await Goal.find({active: false})
-        } 
-        // get goals by destination
-        else if (req.params.id.includes("destination=")){ 
-            let id = req.params.id.substring(12)
-            console.log(id)
-            const elements = await Goal.find()
-            elements.forEach(element => {
-                if (element.destination.includes(id)) {
-                    goals.push(element)
-                }
-            });
-        } 
-        // get goal by id
-        else { 
-           goals = await Goal.findById(req.params.id)
-            if (goals == null) {
-                return res.status(404).json({message: 'Cannot find goal'})
-            }        
-        }
+        });
+    } catch(err) {
+        res.status(500).json({message: err.message})
+    }
+
+    if (filter == 0) {
+        goals.sort((a, b) => a.date - b.date);
+    } else if (filter == 1) {        
+        goals.sort((a, b) => b.date -a.date);
+    } else if (filter == 2) {
+        goals.sort((a, b) => a.priority - b.priority);
+    } else if (filter == 3) {
+        goals.sort((a, b) => b.priority - a.priority);
+    } else {
+        return res.status(404).json({message: 'Cannot find filter'})
+    }
+    res.json(goals)
+})
+
+
+
+//GET A SPECIFIC GOAL 
+router.get('/:id', async (req, res) => {
+    try {
+        const goals = await Goal.findById(req.params.id)
+        if (goals == null) {
+            return res.status(404).json({message: 'Cannot find goal'})
+        }        
         res.json(goals)
     } catch(err) {
         res.status(500).json({message: err.message})

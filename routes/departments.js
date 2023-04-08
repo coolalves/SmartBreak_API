@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const Tip = require("../models/departmentsModel");
+const Department = require("../models/departmentsModel");
 
 //GET ALL DEPARTMENTS
 router.get("/", async (req, res) => {
   try {
-    const departments = await Tip.find();
+    const departments = await Department.find();
     res.json(departments);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 
 //ADD A DEPARTMENT
 router.post("/", async (req, res) => {
-  const department = new Tip({
+  const department = new Department({
     name: req.body.name,
     description: req.body.description,
     organization: req.body.organization,
@@ -28,9 +28,12 @@ router.post("/", async (req, res) => {
 });
 
 //GET A SPECIFIC DEPARTMENT
-router.get("/:name", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const departments = await Tip.find({ name: req.params.name });
+    const departments = await Department.findById(req.params.id)
+    if (departments == null) {
+      return res.status(404).json({ message: 'Cannot find department' })
+    }
     res.json(departments);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -38,9 +41,18 @@ router.get("/:name", async (req, res) => {
 });
 
 //EDIT A SPECIFIC DEPARTMENT
-router.patch("/:name", async (req, res) => {
-  try {
-    const department = await Tip.findOne({ name: req.params.name });
+router.patch("/:id", async (req, res) => {
+  let department
+    try {
+      department = await Department.findById(req.params.id)
+        if (department == null) {
+            return res.status(404).json({ message: 'Cannot find department' })
+        }
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+    res.department = department
+
     if (req.body.name != null) {
       department.name = req.body.name;
     }
@@ -50,18 +62,32 @@ router.patch("/:name", async (req, res) => {
     if (req.body.organization != null) {
       department.organization = req.body.organization;
     }
-    const updatedDepartment = await department.save();
-    res.json(updatedDepartment);
+    try {
+      const updatedDepartment = await res.department.save()
+      res.json(updatedDepartment)
   } catch (err) {
-    res.status(400).json({ message: err.message });
+      res.status(400).json({ message: err.message })
   }
 });
 
 //DELETE A SPECIFIC DEPARTMENT
-router.delete("/:name", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
-    await Tip.findOneAndRemove({ name: req.params.name });
+    await Department.findByIdAndRemove(req.params.id);
     res.json({ message: "Department Deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+//GET DEPARTMENTS FROM ORGANIZATION X
+router.get("/organization/:id", async (req, res) => {
+  try {
+    const departments = await Department.find({ organization: req.params.id })
+    if (departments == null) {
+      return res.status(404).json({ message: 'Cannot find departments' })
+    }
+    res.json(departments);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

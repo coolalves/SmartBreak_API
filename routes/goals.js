@@ -98,7 +98,6 @@ router.get('/destination/:id/filter/:filter', async(req, res) => {
 })
 
 
-
 //GET A SPECIFIC GOAL 
 router.get('/:id', async (req, res) => {
     try {

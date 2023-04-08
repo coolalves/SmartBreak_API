@@ -1,21 +1,20 @@
 
-PATCH http://localhost:4000/goals/642570d4ece7267df6d30b19
+POST   http://localhost:4000/pauses/
 Content-Type: application/json
 
 {
-    "priority": 2
+    "start_date" : "2023-06-25T00:11:40.000Z",
+    "end_date" : "2023-06-25T00:11:57.000Z",
+    "user": "6424b27665ff3c56bc6e5a4f"
 }
 
 ### 
-GET http://localhost:4000/departments
+GET http://localhost:4000/pauses/user/6424b27665ff3c56bc6e5a4f/date/2023-06-23
 
 ###
-GET http://localhost:4000/goals/localhost:4000/goals/inactive
+GET http://localhost:4000/departments/organization/6431a0992f511618152377bb
 
 ###
-GET http://localhost:4000/departments
-
+GET http://localhost:4000/users
 ###
-GET http://localhost:4000/goals/filter=3&destination=6
-###
-DELETE http://localhost:4000/goals/64256e67dfb5e16663b62c8a
+DELETE http://localhost:4000/pauses/6431b976dbb5b9ef0c7a16d0

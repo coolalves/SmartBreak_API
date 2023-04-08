@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
     }
 })
 
-//GET A SPECIFIC TIP
+//GET TIPS BY TYPE
 router.get('/:type', async (req, res) => {
     try {
         const tips = await Tip.find({type: req.params.type})

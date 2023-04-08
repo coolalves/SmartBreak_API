@@ -91,8 +91,7 @@ router.get("/user/:id/date/:date", async (req, res) => {
             return res.status(404).json({ message: 'Cannot find pauses' })
         }
         elements.forEach(element => {
-            console.log(String(element.start_date))
-            if (String(element.start_date).includes(req.params.date)) {
+            if ((element.start_date).toISOString().includes(req.params.date)) {
                 pauses.push(element)
             }
         });

@@ -9,10 +9,10 @@ Content-Type: application/json
 }
 
 ### 
-GET http://localhost:4000/pauses/user/6424b27665ff3c56bc6e5a4f/date/2023-06-23
+GET http://localhost:4000/pauses/user/6424b27665ff3c56bc6e5a4f/date/2023-06-25
 
 ###
-GET http://localhost:4000/departments/organization/6431a0992f511618152377bb
+GET http://localhost:4000/pauses
 
 ###
 GET http://localhost:4000/users

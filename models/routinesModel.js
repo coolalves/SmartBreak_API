@@ -22,6 +22,6 @@ const routinesSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { collection: 'Routines' });
 
 module.exports = mongoose.model("Routine", routinesSchema);

@@ -10,6 +10,6 @@ const rewardsSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-})
+}, { collection: 'Rewards' })
 
 module.exports = mongoose.model('Reward', rewardsSchema)

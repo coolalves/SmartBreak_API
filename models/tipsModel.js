@@ -10,6 +10,6 @@ const tipsSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-})
+}, { collection: 'Tips' })
 
 module.exports = mongoose.model('Tip', tipsSchema)

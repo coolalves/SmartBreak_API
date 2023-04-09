@@ -18,6 +18,6 @@ const pausesSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { collection: 'Pauses' });
 
 module.exports = mongoose.model("Pause", pausesSchema);

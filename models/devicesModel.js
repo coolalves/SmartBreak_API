@@ -22,6 +22,6 @@ const devicesSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-});
+}, { collection: 'Devices' });
 
 module.exports = mongoose.model("Device", devicesSchema);

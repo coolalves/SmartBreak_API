@@ -10,6 +10,6 @@ const metricsSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-})
+}, { collection: 'Metrics' })
 
 module.exports = mongoose.model('Metric', metricsSchema)

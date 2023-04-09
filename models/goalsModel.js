@@ -29,6 +29,6 @@ const goalsSchema = new mongoose.Schema({
         type: Array,
         required: true,
     }
-})
+}, { collection: 'Goals' })
 
 module.exports = mongoose.model('Goal', goalsSchema)

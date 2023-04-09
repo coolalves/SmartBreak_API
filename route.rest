@@ -1,22 +1,22 @@
 
-PATCH   http://localhost:4000/devices/643204c1e6915f420020f507
+PATCH   http://localhost:4000/routines/6432080bcda4d8b5001a4c96
 Content-Type: application/json
 
 {
     "start" : "11:30",
     "end" : "11:40",
     "days" : [false, true, true, true, true, true, false ],
-    "state" : true,
-    "user" : "6424b27665ff3c56bc6e5a4f"
+    "state" : false,
+    "user" : "6424b27665ff3c56bc6e5a4fe"
 }
 
 ### 
 GET http://localhost:4000/devices/user/6424b27665ff3c56bc6e5a4f/
 
 ###
-GET http://localhost:4000/devices
+GET http://localhost:4000/routines/
 
 ###
 GET http://localhost:4000/users
 ###
-DELETE http://localhost:4000/devices/643204c1e6915f420020f507
+DELETE http://localhost:4000/routines/6432080bcda4d8b5001a4c96

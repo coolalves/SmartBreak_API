@@ -15,6 +15,6 @@ const departmentsSchema = new mongoose.Schema({
     required: true,
     default: "",
   },
-});
+}, { collection: 'Departments' });
 
 module.exports = mongoose.model("Department", departmentsSchema);

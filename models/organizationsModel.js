@@ -18,7 +18,6 @@ const organizationsSchema = new mongoose.Schema({
     required: false,
     default: 10000
   },
-
-});
+}, { collection: 'Organizations' });
 
 module.exports = mongoose.model("Organization", organizationsSchema);

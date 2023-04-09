@@ -34,31 +34,23 @@ const usersSchema = new mongoose.Schema({
     battery: {
         type: Number,
         required: true,
+        default: 0,
     },
     total_battery: {
         type: Number,
         required: true,
         default: 0,
     },
-    pauses: {
-        type: Object,
+    pause: {
+        type: Boolean,
         required: true,
-        default: {}
+        default: false
     },
     department: {
-        type: Number,
+        type: String,
         required: true,
     },
-    routines: {
-        type: Array,
-        required: true,
-        default: [],
-    },
-    devices: {
-        type: Array,
-        required: true,
-        default: [],
-    },
+   
     rewards: {
         type: Array,
         required: true,

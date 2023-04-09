@@ -25,7 +25,6 @@ router.post('/', async (req, res) => {
         email: req.body.email,
         password: req.body.password,
         admin: req.body.admin,
-        battery: req.body.battery,
         department: req.body.department
     })
     try {
@@ -38,6 +37,16 @@ router.post('/', async (req, res) => {
 
 //UPDATE ONE USER
 router.patch('/:id', getUser, async (req, res) => {
+    let user
+    try {
+        user = await User.findById(req.params.id)
+        if (user == null) {
+            return res.status(404).json({ message: 'Cannot find user' })
+        }
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+    res.user = user
     if (req.body.name != null) {
         res.user.name = req.body.name
     }
@@ -62,14 +71,8 @@ router.patch('/:id', getUser, async (req, res) => {
     if (req.body.total_battery != null) {
         res.user.total_battery = req.body.total_battery
     }
-    if (req.body.pauses != null) {
+    if (req.body.pause != null) {
         res.user.pauses = req.body.pauses
-    }
-    if (req.body.routines != null) {
-        res.user.routines = req.body.routines
-    }
-    if (req.body.devices != null) {
-        res.user.devices = req.body.devices
     }
     if (req.body.rewards != null) {
         res.user.rewards = req.body.rewards
@@ -92,70 +95,29 @@ router.patch('/:id', getUser, async (req, res) => {
 })
 
 //DELETE ONE USER
-router.delete('/:id', (req, res) => {
-
-})
-
-//GET A USER'S HISTORY
-router.get('/:id/history', (req, res) => {
-
-})
-
-//GET A USER'S DEVICES
-router.get('/:id/devices', (req, res) => {
-
-})
-
-//ADD A NEW USER'S DEVICE
-router.post('/:id/devices', (req, res) => {
-
-})
-
-//EDIT A USER'S DEVICE
-router.patch('/:id/devices/:device_id', (req, res) => {
-
-})
-
-//DELETE A USER'S DEVICE
-router.delete('/:id/devices/:device_id', (req, res) => {
-
-})
-
-//GET A USER'S ROUTINES
-router.get('/:id/routines', (req, res) => {
-
-})
-
-//ADD A NEW USER'S ROUTINE
-router.post('/:id/routines', (req, res) => {
-
-})
-
-//EDIT A USER'S ROUTINE
-router.patch('/:id/routines/:routine_id', (req, res) => {
-
-})
-
-//DELETE A USER'S ROUTINE
-router.delete('/:id/routines/:routine_id', (req, res) => {
-
-})
-
-//GET A USER'S REWARDS
-router.get('/:id/rewards', (req, res) => {
-
+router.delete('/:id', async (req, res) => {
+    try {
+        await User.findByIdAndRemove(req.params.id)
+        res.json({ message: 'User Deleted' })
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
 })
 
 //GET USERS FROM A DEPARTMENT
-router.get('/:department_id/', (req, res) => {
-
+router.get('/department/:id', async (req, res) => {
+    try {
+        const users = await User.find({ department: req.params.id })
+        if (users == null) {
+          return res.status(404).json({ message: 'Cannot find users' })
+        }
+        res.json(users);
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
 })
 
-//GET USERS FROM A ORGANIZATION
-router.get('/:organization_id/', (req, res) => {
-
-})
-
+  
 async function getUser(req, res, next) {
     let user
     try {

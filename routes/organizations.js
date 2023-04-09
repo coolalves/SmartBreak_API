@@ -61,6 +61,9 @@ router.patch("/:id", async (req, res) => {
     if (req.body.phone_number != null) {
         res.organization.phone_number = req.body.phone_number
     }
+    if (req.body.battery_full != null) {
+        res.organization.battery_full = req.body.battery_full
+    }
     try {
         const updatedOrganization = await res.organization.save()
         res.json(updatedOrganization)

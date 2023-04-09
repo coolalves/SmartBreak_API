@@ -13,6 +13,12 @@ const organizationsSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  battery_full: {
+    type: Number,
+    required: false,
+    default: 10000
+  },
+
 });
 
 module.exports = mongoose.model("Organization", organizationsSchema);

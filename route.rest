@@ -1,20 +1,22 @@
 
-POST   http://localhost:4000/pauses/
+PATCH   http://localhost:4000/devices/643204c1e6915f420020f507
 Content-Type: application/json
 
 {
-    "start_date" : "2023-06-25T00:11:40.000Z",
-    "end_date" : "2023-06-25T00:11:57.000Z",
-    "user": "6424b27665ff3c56bc6e5a4f"
+    "start" : "11:30",
+    "end" : "11:40",
+    "days" : [false, true, true, true, true, true, false ],
+    "state" : true,
+    "user" : "6424b27665ff3c56bc6e5a4f"
 }
 
 ### 
-GET http://localhost:4000/pauses/user/6424b27665ff3c56bc6e5a4f/date/2023-06-25
+GET http://localhost:4000/devices/user/6424b27665ff3c56bc6e5a4f/
 
 ###
-GET http://localhost:4000/pauses
+GET http://localhost:4000/devices
 
 ###
 GET http://localhost:4000/users
 ###
-DELETE http://localhost:4000/pauses/6431b976dbb5b9ef0c7a16d0
+DELETE http://localhost:4000/devices/643204c1e6915f420020f507

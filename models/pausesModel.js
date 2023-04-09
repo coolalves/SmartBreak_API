@@ -7,7 +7,7 @@ const pausesSchema = new mongoose.Schema({
   },
   end_date: {
     type: Date,
-    required: true,
+    required: false,
   },
   ideal: {
     type: Number,

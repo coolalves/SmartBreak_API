@@ -1,0 +1,28 @@
+{
+  "name": "smartbreak_api",
+  "version": "1.0.0",
+  "description": "smartbreak api",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coolalves/SmartBreak_API.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coolalves/SmartBreak_API/issues"
+  },
+  "homepage": "https://github.com/coolalves/SmartBreak_API#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.22"
+  }
+}

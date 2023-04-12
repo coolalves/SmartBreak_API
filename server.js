@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true})
 
 app.use(express.json())
 
-const usersRouter = require('./routes/Users')
+const usersRouter = require('./routes/users.js')
 const tipsRouter = require('./routes/Tips')
 const goalsRouter = require('./routes/Goals')
 const departmentsRouter = require('./routes/Departments')

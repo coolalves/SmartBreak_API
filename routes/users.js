@@ -1,8 +1,7 @@
-import checkToken from "../security/checkToken";
-
 const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
+const checkToken = require("../security/checkToken");
 
 //GET ALL USERS
 router.get("/", checkToken, async (req, res) => {

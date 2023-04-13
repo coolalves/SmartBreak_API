@@ -1,5 +1,5 @@
 //API TOKEN CHECK
-const checkToken = (req, res, next) => {
+module.exports = exports = function checkToken(req, res, next) {
   const api_key = req.headers["api-key"];
   if (api_key === process.env.API_KEY) {
     next();
@@ -7,5 +7,3 @@ const checkToken = (req, res, next) => {
     res.status(401).send({ message: "Unauthorized - Invalid API Key!" });
   }
 };
-
-export default checkToken;

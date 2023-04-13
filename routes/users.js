@@ -1,16 +1,8 @@
+import checkToken from "../security/checkToken";
+
 const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
-
-//API TOKEN CHECK
-const checkToken = (req, res, next) => {
-  const api_key = req.headers["api-key"];
-  if (api_key === process.env.API_KEY) {
-    next();
-  } else {
-    res.status(401).send({ message: "Unauthorized - Invalid API Key!" });
-  }
-};
 
 //GET ALL USERS
 router.get("/", checkToken, async (req, res) => {

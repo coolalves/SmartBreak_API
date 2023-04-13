@@ -19,9 +19,7 @@
   "homepage": "https://github.com/coolalves/SmartBreak_API#readme",
   "dependencies": {
     "express": "^4.18.2",
-    "mongoose": "^7.0.3"
-  },
-  "devDependencies": {
+    "mongoose": "^7.0.3",
     "dotenv": "^16.0.3",
     "nodemon": "^2.0.22"
   }

@@ -48,7 +48,7 @@ router.get("/:id", checkToken, getUser, async (req, res) => {
 });
 
 //ADD A USER
-router.post("/register", checkToken, async (req, res) => {
+router.post("/register", async (req, res) => {
   const { name, surname, email, password, admin, department } = req.body;
 
   try {

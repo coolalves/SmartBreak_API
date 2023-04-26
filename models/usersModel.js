@@ -53,7 +53,7 @@ const usersSchema = new mongoose.Schema({
         required: true,
         default: [],
     },
-    acessibility: {
+    accessibility: {
         type: Array,
         required: true,
         default: [false, false],

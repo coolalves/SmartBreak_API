@@ -78,8 +78,8 @@ router.patch("/:id", checkToken, getUser, async (req, res) => {
   if (req.body.rewards != null) {
     res.user.rewards = req.body.rewards;
   }
-  if (req.body.acessibility != null) {
-    res.user.acessibility = req.body.acessibility;
+  if (req.body.accessibility != null) {
+    res.user.accessibility = req.body.accessibility;
   }
   if (req.body.notifications != null) {
     res.user.notifications = req.body.notifications;

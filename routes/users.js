@@ -2,6 +2,35 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
 const checkToken = require("../security/checkToken");
+const passport = require("passport");
+
+/////////////////////////////////////////////////////////////////
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = "secret";
+
+passport.use(
+  new JwtStrategy(opts, async (jwt_payload, done) => {
+    try {
+      const user = await User.findById(jwt_payload.id);
+
+      if (user) {
+        return done(null, user);
+      } else {
+        return done(null, false);
+      }
+    } catch (err) {
+      return done(err, false);
+    }
+  })
+);
+
+///////////////////////////////////////////////////////////
 
 //GET ALL USERS
 router.get("/", checkToken, async (req, res) => {
@@ -18,21 +47,68 @@ router.get("/:id", checkToken, getUser, async (req, res) => {
   res.send(res.user);
 });
 
-//ADD ONE USER
-router.post("/", checkToken, async (req, res) => {
-  const user = new User({
-    name: req.body.name,
-    surname: req.body.surname,
-    email: req.body.email,
-    password: req.body.password,
-    admin: req.body.admin,
-    department: req.body.department,
-  });
+//ADD A USER
+router.post("/register", checkToken, async (req, res) => {
+  const { name, surname, email, password, admin, department } = req.body;
+
   try {
-    const newUser = await user.save();
-    res.status(201).json(newUser);
+    // Verifica se o email ja existe
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res
+        .status(400)
+        .json({ message: "User with email already exists" });
+    }
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newUser = new User({
+      name,
+      surname,
+      email,
+      password: hashedPassword,
+      admin,
+      department,
+    });
+
+    await newUser.save();
+
+    // Generate token
+    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_TOKEN, {
+      expiresIn: "1h",
+    });
+
+    res.status(201).json({ user: newUser, token });
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// USER LOGIN
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    // Find the user with the provided email
+    const user = await User.findOne({ email });
+
+    // If the user is not found, return an error
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Check if the entered password matches the user's password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    // Create and return a JWT for the authenticated user
+    const token = jwt.sign({ user_id: user._id }, process.env.JWT_TOKEN);
+    return res.status(200).json({ token });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 });
 

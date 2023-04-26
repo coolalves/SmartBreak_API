@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
-const checkToken = require("../security/checkToken");
 const passport = require("passport");
 
-/////////////////////////////////////////////////////////////////
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const jwt = require("jsonwebtoken");
@@ -12,7 +10,7 @@ const bcrypt = require("bcryptjs");
 
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = "secret";
+opts.secretOrKey = process.env.JWT_SECRET;
 
 passport.use(
   new JwtStrategy(opts, async (jwt_payload, done) => {
@@ -30,22 +28,29 @@ passport.use(
   })
 );
 
-///////////////////////////////////////////////////////////
-
 //GET ALL USERS
-router.get("/", checkToken, async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const users = await User.find();
+      res.json(users);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
   }
-});
+);
 
 //GET ONE USER
-router.get("/:id", checkToken, getUser, async (req, res) => {
-  res.send(res.user);
-});
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  getUser,
+  async (req, res) => {
+    res.send(res.user);
+  }
+);
 
 //ADD A USER
 router.post("/register", async (req, res) => {
@@ -76,8 +81,8 @@ router.post("/register", async (req, res) => {
     await newUser.save();
 
     // Generate token
-    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_TOKEN, {
-      expiresIn: "1h",
+    const token = jwt.sign({ user_id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRATION_TIME,
     });
 
     res.status(201).json({ user: newUser, token });
@@ -174,38 +179,11 @@ router.patch("/:id", checkToken, getUser, async (req, res) => {
 //DELETE ONE USER
 router.delete("/:id", checkToken, async (req, res) => {
   try {
-    await User.findByIdAndRemove(req.params.id);
-    res.json({ message: "User Deleted" });
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-});
-
-//GET USERS FROM A DEPARTMENT
-router.get("/department/:id", checkToken, async (req, res) => {
-  try {
-    const users = await User.find({ department: req.params.id });
-    if (users == null) {
-      return res.status(404).json({ message: "Cannot find users" });
-    }
-    res.json(users);
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "User deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-
-async function getUser(req, res, next) {
-  let user;
-  try {
-    user = await User.findById(req.params.id);
-    if (user == null) {
-      return res.status(404).json({ message: "Cannot find user" });
-    }
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-  res.user = user;
-  next();
-}
 
 module.exports = router;

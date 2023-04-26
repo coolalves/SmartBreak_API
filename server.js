@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const listEndpoints = require("express-list-endpoints");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -28,6 +29,7 @@ const organizationsRouter = require("./routes/organizations.js");
 const pausesRouter = require("./routes/pauses.js");
 const devicesRouter = require("./routes/devices.js");
 const routinesRouter = require("./routes/routines.js");
+const authRouter = require("./routes/auth.js");
 
 app.use("/users", usersRouter);
 app.use("/tips", tipsRouter);
@@ -39,3 +41,6 @@ app.use("/organizations", organizationsRouter);
 app.use("/pauses", pausesRouter);
 app.use("/devices", devicesRouter);
 app.use("/routines", routinesRouter);
+app.use("/auth", authRouter);
+
+console.log(listEndpoints(app));

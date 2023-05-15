@@ -25,7 +25,7 @@ const usersSchema = new mongoose.Schema({
     },
     token:{
         type: String,
-        default: "",
+        default: null,
     },
     created: {
         type: Date,

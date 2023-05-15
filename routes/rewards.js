@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Reward = require("../models/rewardsModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL REWARDS
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const rewards = await Reward.find();
     res.json(rewards);
@@ -14,7 +14,7 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //ADD A REWARD
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const reward = new Reward({
     description: req.body.description,
     type: req.body.type,
@@ -28,7 +28,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 //GET A SPECIFIC REWARD
-router.get("/:id", checkToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const rewards = await Reward.findById(req.params.id);
     if (rewards == null) {
@@ -41,7 +41,7 @@ router.get("/:id", checkToken, async (req, res) => {
 });
 
 //GET REWARDS BY TYPE
-router.get("/type/:type", checkToken, async (req, res) => {
+router.get("/type/:type", verifyToken, async (req, res) => {
   try {
     const rewards = await Reward.find({ type: req.params.type });
     if (rewards == null) {
@@ -54,7 +54,7 @@ router.get("/type/:type", checkToken, async (req, res) => {
 });
 
 //EDIT A REWARD BY ID
-router.patch("/:id", checkToken, async (req, res) => {
+router.patch("/:id", verifyToken, async (req, res) => {
   let reward;
   try {
     reward = await Reward.findById(req.params.id);
@@ -80,7 +80,7 @@ router.patch("/:id", checkToken, async (req, res) => {
 });
 
 //DELETE A SPECIFIC REWARD
-router.delete("/:id", checkToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     console.log(req.params.id);
     await Reward.findByIdAndRemove(req.params.id);

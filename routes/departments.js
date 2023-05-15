@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Department = require("../models/departmentsModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL DEPARTMENTS
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const departments = await Department.find();
     res.json(departments);
@@ -14,7 +14,7 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //ADD A DEPARTMENT
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const department = new Department({
     name: req.body.name,
     description: req.body.description,
@@ -29,7 +29,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 //GET A SPECIFIC DEPARTMENT
-router.get("/:id", checkToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const departments = await Department.findById(req.params.id);
     if (departments == null) {
@@ -42,7 +42,7 @@ router.get("/:id", checkToken, async (req, res) => {
 });
 
 //EDIT A SPECIFIC DEPARTMENT
-router.patch("/:id", checkToken, async (req, res) => {
+router.patch("/:id", verifyToken, async (req, res) => {
   let department;
   try {
     department = await Department.findById(req.params.id);
@@ -72,7 +72,7 @@ router.patch("/:id", checkToken, async (req, res) => {
 });
 
 //DELETE A SPECIFIC DEPARTMENT
-router.delete("/:id", checkToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Department.findByIdAndRemove(req.params.id);
     res.json({ message: "Department Deleted" });
@@ -82,7 +82,7 @@ router.delete("/:id", checkToken, async (req, res) => {
 });
 
 //GET DEPARTMENTS FROM ORGANIZATION X
-router.get("/organization/:id", checkToken, async (req, res) => {
+router.get("/organization/:id", verifyToken, async (req, res) => {
   try {
     const departments = await Department.find({ organization: req.params.id });
     if (departments == null) {

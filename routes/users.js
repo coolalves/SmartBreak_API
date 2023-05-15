@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL USERS
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
@@ -14,12 +14,12 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //GET ONE USER
-router.get("/:id", checkToken, getUser, async (req, res) => {
+router.get("/:id", verifyToken, getUser, async (req, res) => {
   res.send(res.user);
 });
 
 //ADD ONE USER
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const user = new User({
     name: req.body.name,
     surname: req.body.surname,
@@ -37,7 +37,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 //UPDATE ONE USER
-router.patch("/:id", checkToken, getUser, async (req, res) => {
+router.patch("/:id", verifyToken, getUser, async (req, res) => {
   let user;
   try {
     user = await User.findById(req.params.id);
@@ -96,7 +96,7 @@ router.patch("/:id", checkToken, getUser, async (req, res) => {
 });
 
 //DELETE ONE USER
-router.delete("/:id", checkToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await User.findByIdAndRemove(req.params.id);
     res.json({ message: "User Deleted" });
@@ -106,7 +106,7 @@ router.delete("/:id", checkToken, async (req, res) => {
 });
 
 //GET USERS FROM A DEPARTMENT
-router.get("/department/:id", checkToken, async (req, res) => {
+router.get("/department/:id", verifyToken, async (req, res) => {
   try {
     const users = await User.find({ department: req.params.id });
     if (users == null) {
@@ -117,6 +117,8 @@ router.get("/department/:id", checkToken, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+
 
 async function getUser(req, res, next) {
   let user;
@@ -131,5 +133,6 @@ async function getUser(req, res, next) {
   res.user = user;
   next();
 }
+
 
 module.exports = router;

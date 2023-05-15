@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Tip = require("../models/tipsModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL TIPS
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const tips = await Tip.find();
     res.json(tips);
@@ -14,7 +14,7 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //ADD A TIP
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const tip = new Tip({
     type: req.body.type,
     description: req.body.description,
@@ -28,7 +28,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 //GET TIPS BY TYPE
-router.get("/:type", checkToken, async (req, res) => {
+router.get("/:type", verifyToken, async (req, res) => {
   try {
     const tips = await Tip.find({ type: req.params.type });
     res.json(tips);

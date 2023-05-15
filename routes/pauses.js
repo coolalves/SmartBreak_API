@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Pause = require("../models/pausesModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL PAUSES
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const pauses = await Pause.find();
     res.json(pauses);
@@ -14,7 +14,7 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //ADD A PAUSE
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const pause = new Pause({
     start_date: req.body.start_date,
     end_date: req.body.end_date,
@@ -29,7 +29,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 //GET A SPECIFIC PAUSE
-router.get("/:id", checkToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const pause = await Pause.findById(req.params.id);
     if (pause == null) {
@@ -42,7 +42,7 @@ router.get("/:id", checkToken, async (req, res) => {
 });
 
 //EDIT A SPECIFIC PAUSE
-router.patch("/:id", checkToken, async (req, res) => {
+router.patch("/:id", verifyToken, async (req, res) => {
   let pause;
   try {
     pause = await Pause.findById(req.params.id);
@@ -71,7 +71,7 @@ router.patch("/:id", checkToken, async (req, res) => {
 });
 
 //GET USER PAUSES
-router.get("/user/:id", checkToken, async (req, res) => {
+router.get("/user/:id", verifyToken, async (req, res) => {
   try {
     const pauses = await Pause.find({ user: req.params.id });
     if (pauses == null) {
@@ -84,7 +84,7 @@ router.get("/user/:id", checkToken, async (req, res) => {
 });
 
 //GET PAUSES BY DATA
-router.get("/user/:id/date/:date", checkToken, async (req, res) => {
+router.get("/user/:id/date/:date", verifyToken, async (req, res) => {
   try {
     let pauses = [];
     const elements = await Pause.find({ user: req.params.id });
@@ -103,7 +103,7 @@ router.get("/user/:id/date/:date", checkToken, async (req, res) => {
 });
 
 //DELETE A SPECIFIC PAUSE
-router.delete("/:id", checkToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Pause.findByIdAndRemove(req.params.id);
     res.json({ message: "Pause Deleted" });

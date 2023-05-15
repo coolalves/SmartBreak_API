@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Device = require("../models/devicesModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL DEVICES
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const devices = await Device.find();
     res.json(devices);
@@ -14,7 +14,7 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //ADD A DEVICE
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const device = new Device({
     name: req.body.name,
     energy: req.body.energy,
@@ -31,7 +31,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 //GET A SPECIFIC DEVICE
-router.get("/:id", checkToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const device = await Device.findById(req.params.id);
     if (device == null) {
@@ -44,7 +44,7 @@ router.get("/:id", checkToken, async (req, res) => {
 });
 
 //EDIT A SPECIFIC DEVICE
-router.patch("/:id", checkToken, async (req, res) => {
+router.patch("/:id", verifyToken, async (req, res) => {
   let device;
   try {
     device = await Device.findById(req.params.id);
@@ -76,7 +76,7 @@ router.patch("/:id", checkToken, async (req, res) => {
 });
 
 //GET USER DEVICES
-router.get("/user/:id", checkToken, async (req, res) => {
+router.get("/user/:id", verifyToken, async (req, res) => {
   try {
     const devices = await Device.find({ user: req.params.id });
     if (devices == null) {
@@ -89,7 +89,7 @@ router.get("/user/:id", checkToken, async (req, res) => {
 });
 
 //DELETE A SPECIFIC DEVICE
-router.delete("/:id", checkToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Device.findByIdAndRemove(req.params.id);
     res.json({ message: "Device Deleted" });

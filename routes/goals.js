@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Goal = require("../models/goalsModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL GOALS
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const goals = await Goal.find();
     res.json(goals);
@@ -14,7 +14,7 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //ADD A GOAL
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const goal = new Goal({
     description: req.body.description,
     destination: req.body.destination,
@@ -32,7 +32,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 // GET ACTIVE GOALS
-router.get("/active", checkToken, async (req, res) => {
+router.get("/active", verifyToken, async (req, res) => {
   try {
     const goals = await Goal.find({ active: true });
     res.json(goals);
@@ -42,7 +42,7 @@ router.get("/active", checkToken, async (req, res) => {
 });
 
 // GET INACTIVE GOALS
-router.get("/inactive", checkToken, async (req, res) => {
+router.get("/inactive", verifyToken, async (req, res) => {
   try {
     const goals = await Goal.find({ active: false });
     res.json(goals);
@@ -52,7 +52,7 @@ router.get("/inactive", checkToken, async (req, res) => {
 });
 
 // GET USER_ID/DEPARTMENT_ID GOALS
-router.get("/destination/:id", checkToken, async (req, res) => {
+router.get("/destination/:id", verifyToken, async (req, res) => {
   try {
     let goals = [];
     const elements = await Goal.find();
@@ -68,7 +68,7 @@ router.get("/destination/:id", checkToken, async (req, res) => {
 });
 
 // GET GOALS SORT BY FILTER
-router.get("/destination/:id/filter/:filter", checkToken, async (req, res) => {
+router.get("/destination/:id/filter/:filter", verifyToken, async (req, res) => {
   let filter = req.params.filter;
   let destination_id = req.params.id;
   let goals = [];
@@ -99,7 +99,7 @@ router.get("/destination/:id/filter/:filter", checkToken, async (req, res) => {
 });
 
 //GET A SPECIFIC GOAL
-router.get("/:id", checkToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const goals = await Goal.findById(req.params.id);
     if (goals == null) {
@@ -112,7 +112,7 @@ router.get("/:id", checkToken, async (req, res) => {
 });
 
 //EDIT A SPECIFIC GOAL
-router.patch("/:id", checkToken, async (req, res) => {
+router.patch("/:id", verifyToken, async (req, res) => {
   let goal;
   try {
     goal = await Goal.findById(req.params.id);
@@ -150,7 +150,7 @@ router.patch("/:id", checkToken, async (req, res) => {
 });
 
 //DELETE A SPECIFIC GOAL
-router.delete("/:id", checkToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     console.log(req.params.id);
     await Goal.findByIdAndRemove(req.params.id);

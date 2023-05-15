@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Routine = require("../models/routinesModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL DEVICES
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const routines = await Routine.find();
     res.json(routines);
@@ -14,7 +14,7 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //ADD A ROUTINE
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const routine = new Routine({
     end: req.body.end,
     start: req.body.start,
@@ -31,7 +31,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 //GET A SPECIFIC ROUTINE
-router.get("/:id", checkToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const routine = await Routine.findById(req.params.id);
     if (routine == null) {
@@ -44,7 +44,7 @@ router.get("/:id", checkToken, async (req, res) => {
 });
 
 //EDIT A SPECIFIC ROUTINE
-router.patch("/:id", checkToken, async (req, res) => {
+router.patch("/:id", verifyToken, async (req, res) => {
   let routine;
   try {
     routine = await Routine.findById(req.params.id);
@@ -76,7 +76,7 @@ router.patch("/:id", checkToken, async (req, res) => {
 });
 
 //GET USER DEVICES
-router.get("/user/:id", checkToken, async (req, res) => {
+router.get("/user/:id", verifyToken, async (req, res) => {
   try {
     const routines = await Routine.find({ user: req.params.id });
     if (routines == null) {
@@ -89,7 +89,7 @@ router.get("/user/:id", checkToken, async (req, res) => {
 });
 
 //DELETE A SPECIFIC ROUTINE
-router.delete("/:id", checkToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Routine.findByIdAndRemove(req.params.id);
     res.json({ message: "Routine Deleted" });

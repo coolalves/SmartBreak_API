@@ -5,11 +5,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("../security/verifyToken");
 
-//Registar user
+// Register user
 router.post("/register", async (req, res) => {
+  const created = new Date();
   const userExists = await User.findOne({ email: req.body.email });
+
   const salt = await bcrypt.genSalt(12);
-  const passwordHash = await bcrypt.hash(req.body.password, salt);
+  const passwordToHash = req.body.password + created.toISOString(); //concatena a password com a data de criação do user
+  const passwordHash = await bcrypt.hash(passwordToHash, salt); //encripta a password
 
   const user = new User({
     name: req.body.name,
@@ -18,8 +21,8 @@ router.post("/register", async (req, res) => {
     password: passwordHash,
     admin: req.body.admin,
     department: req.body.department,
+    created: created, //data de criação do user
   });
-
   const missingFields = [];
 
   if (!req.body.name) {
@@ -57,7 +60,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// login user
+// Login user
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -66,17 +69,18 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ message: "Invalid email or password" });
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const passwordToCheck = password + user.created.toISOString(); //concatena a password com a data de criação do user
+  const isMatch = await bcrypt.compare(passwordToCheck, user.password); //compara a password encriptada com a password inserida
 
   if (!isMatch) {
-    return res.status(400).json({ message: "Invalid email or password" });
+    return res.status(400).json({ message: "Invalid email or password" }); //se não for igual, retorna erro
   }
 
   // gera o token
   const secret = process.env.JWT_SECRET;
   const token = jwt.sign({ id: user._id }, secret);
 
-  // guarda o token no documento do user
+  // guarda o token no documento
   user.token = token;
   await user.save();
 
@@ -84,10 +88,12 @@ router.post("/login", async (req, res) => {
 });
 
 // Logout user
-router.post("/logout", verifyToken, async (req, res) => {
+router.post("/logout/:id", verifyToken, async (req, res) => {
+  const id = req.params.id;
+
   try {
-    // procura o user pelo id
-    const user = await User.findById(req.userId);
+    // encontra o user pelo id
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });

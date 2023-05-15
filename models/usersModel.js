@@ -23,6 +23,10 @@ const usersSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    token:{
+        type: String,
+        default: "",
+    },
     created: {
         type: Date,
         required: true,

@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Metric = require("../models/metricsModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL METRICS
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const metrics = await Metric.find();
     res.json(metrics);
@@ -14,7 +14,7 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //ADD A METRIC
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const metric = new Metric({
     description: req.body.description,
     type: req.body.type,
@@ -28,7 +28,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 //GET A SPECIFIC METRIC
-router.get("/:id", checkToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const metrics = await Metric.findById(req.params.id);
     if (metrics == null) {
@@ -41,7 +41,7 @@ router.get("/:id", checkToken, async (req, res) => {
 });
 
 //DELETE A SPECIFIC METRIC
-router.delete("/:id", checkToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     console.log(req.params.id);
     await Metric.findByIdAndRemove(req.params.id);

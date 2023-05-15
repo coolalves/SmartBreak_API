@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Organization = require("../models/organizationsModel");
-const checkToken = require("../security/checkToken");
+const verifyToken = require("../security/verifyToken");
 
 //GET ALL ORGANIZATIONS
-router.get("/", checkToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const organizations = await Organization.find();
     res.json(organizations);
@@ -14,7 +14,7 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 //ADD A ORGANIZATION
-router.post("/", checkToken, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const organization = new Organization({
     name: req.body.name,
     address: req.body.address,
@@ -29,7 +29,7 @@ router.post("/", checkToken, async (req, res) => {
 });
 
 //GET A SPECIFIC ORGANIZATION
-router.get("/:id", checkToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const organization = await Organization.findById(req.params.id);
     if (organization == null) {
@@ -42,7 +42,7 @@ router.get("/:id", checkToken, async (req, res) => {
 });
 
 //EDIT A SPECIFIC ORGANIZATION
-router.patch("/:id", checkToken, async (req, res) => {
+router.patch("/:id", verifyToken, async (req, res) => {
   let organization;
   try {
     organization = await Organization.findById(req.params.id);
@@ -74,7 +74,7 @@ router.patch("/:id", checkToken, async (req, res) => {
 });
 
 //DELETE A SPECIFIC ORGANIZATION
-router.delete("/:id", checkToken, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Organization.findByIdAndRemove(req.params.id);
     res.json({ message: "Organization Deleted" });

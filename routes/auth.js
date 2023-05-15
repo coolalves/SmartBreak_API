@@ -94,7 +94,7 @@ router.post("/logout", verifyToken, async (req, res) => {
     }
 
     // limpa o token
-    user.token = "";
+    user.token = null;
     await user.save();
 
     res.status(200).json({ message: "Logged out successfully" });

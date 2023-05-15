@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const verifyToken = require("../security/verifyToken");
 
 //Registar user
 router.post("/register", async (req, res) => {
@@ -55,25 +56,21 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ message: "Invalid email or password" });
   }
 
-  //try catch
-  try {
-    const secret = process.env.JWT_SECRET;
-    const token = jwt.sign(
-      {
-        id: user._id,
-      },
-      secret
-    );
+  // gerar token
+  const secret = process.env.JWT_SECRET;
+  const token = jwt.sign(
+    {
+      id: user._id,
+    },
+    secret
+  );
 
-    res.status(200).json({ message: "Logged in successfully", token });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({
-      message: "Something went wrong",
-    });
-  }
+  // guardar token no documento do user
+  user.token = token;
+  await user.save();
+
+  res.status(200).json({ message: "Logged in successfully", token });
 });
-
 
 //private route para ir buscar um user por id
 router.get("/users/:id", verifyToken, async (req, res) => {

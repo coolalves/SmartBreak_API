@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
+const secret = process.env.JWT_SECRET;
 
-//verificar token
-module.exports = exports = function verifyToken(req, res, next) {
+// verificar token
+module.exports = function verifyToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
@@ -10,14 +11,14 @@ module.exports = exports = function verifyToken(req, res, next) {
   }
 
   try {
-    const secret = process.env.JWT_SECRET;
-    jwt.verify(token, secret);
+    const decoded = jwt.verify(token, secret);
+
+    // anexa o decoded payload ao request object
+    req.user = decoded;
 
     next();
   } catch (err) {
     console.log(err);
-    res.status(400).json({
-      message: "Invalid Token",
-    });
+    res.status(400).json({ message: "Invalid Token" });
   }
 };

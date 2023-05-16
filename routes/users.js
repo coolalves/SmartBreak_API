@@ -132,9 +132,9 @@ router.get("/department/:id/page/:page", verifyToken, async (req, res) => {
     if (isNaN(req.params.page))
       return res.status(400).json({ message: req.params.page + " is not a number" });
 
-    const totalPages = users.length/4
+    const totalPages = Math.floor(users.length/10) + 1 
 
-    res.json({total_pages: totalPages, results: users.slice((req.params.page - 1) *4, req.params.page*4)});
+    res.json({total_pages: totalPages, results: users.slice((req.params.page - 1) *10, req.params.page*10)});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

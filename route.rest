@@ -20,4 +20,17 @@ Content-Type: application/json
 
 }
 ###
+POST  https://sb-api.herokuapp.com/auth/login
+Content-Type: application/json
+
+{
+    "email": "exemplo@sb.pt",
+    "password" : "1234",
+    "name" : "Fulano",
+    "surname" : "Ciclano",
+    "admin" : false,
+    "department" : "DECA"
+}
+
+###
 DELETE http://localhost:4000/routines/6432080bcda4d8b5001a4c96

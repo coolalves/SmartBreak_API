@@ -13,6 +13,17 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
+//GET THE USERS BY PAGE
+router.get("/page/:page", verifyToken, async (req, res) => {
+  try {
+    const users = await User.find();
+
+    res.json(users.slice(1,3));
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 //GET ONE USER
 router.get("/:id", verifyToken, getUser, async (req, res) => {
   res.send(res.user);

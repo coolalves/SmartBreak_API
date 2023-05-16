@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
     admin: req.body.admin,
     department: req.body.department,
     created: created, //data de criação do user
-    connected_in: new Date().getTime(),
+    connected_in: created,
   });
   const missingFields = [];
 

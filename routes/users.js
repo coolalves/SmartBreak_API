@@ -123,7 +123,7 @@ router.get("/department/:id", verifyToken, async (req, res) => {
 
 
 //GET THE USERS BY PAGE
-router.get("department/:id/:page", verifyToken, async (req, res) => {
+router.get("/department/:id/page/:page", verifyToken, async (req, res) => {
   try {
     const users = await User.find({ department: req.params.id });
     if (users == null) {

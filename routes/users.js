@@ -134,7 +134,7 @@ router.get("department/:id/page/:page", verifyToken, async (req, res) => {
 
     const totalPages = users.length/4
 
-    res.json({total_pages: totalPages, message: users.slice((req.params.page - 1) *4, req.params.page*4)});
+    res.json({total_pages: totalPages, results: users.slice((req.params.page - 1) *4, req.params.page*4)});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

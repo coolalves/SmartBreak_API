@@ -48,7 +48,7 @@ router.post("/register", async (req, res) => {
   if (missingFields.length > 0) {
     return res
       .status(400)
-      .json({ message: "Please fill all the fields", missingFields });
+      .json({ message: "Please fill all the fields: " +  missingFields });
   } else if (!userExists) {
     try {
       const newUser = await user.save();

@@ -18,7 +18,10 @@ router.get("/page/:page", verifyToken, async (req, res) => {
   try {
     const users = await User.find();
 
-    res.json(users.slice(1,3));
+    if (isNaN(req.params.page))
+      return res.status(400).json({ message: "Invalid page" });
+
+    res.json(users.slice((req.params.page - 1) *4, req.params.page*4));
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

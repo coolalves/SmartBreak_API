@@ -16,24 +16,6 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
-//GET THE USERS BY PAGE
-router.get("department/:id/page/:page", verifyToken, async (req, res) => {
-  try {
-    const users = await User.find({ department: req.params.id });
-    if (users == null) {
-      return res.status(404).json({ message: "Cannot find users" });
-    }
-    if (isNaN(req.params.page))
-      return res.status(400).json({ message: req.params.page + " is not a number" });
-
-    const totalPages = users.length/4
-
-    res.json({total_pages: totalPages, message: users.slice((req.params.page - 1) *4, req.params.page*4)});
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
 //GET ONE USER
 router.get("/:id", verifyToken, getUser, async (req, res) => {
   res.send(res.user);
@@ -134,6 +116,25 @@ router.get("/department/:id", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "Cannot find users" });
     }
     res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+//GET THE USERS BY PAGE
+router.get("department/:id/page/:page", verifyToken, async (req, res) => {
+  try {
+    const users = await User.find({ department: req.params.id });
+    if (users == null) {
+      return res.status(404).json({ message: "Cannot find users" });
+    }
+    if (isNaN(req.params.page))
+      return res.status(400).json({ message: req.params.page + " is not a number" });
+
+    const totalPages = users.length/4
+
+    res.json({total_pages: totalPages, message: users.slice((req.params.page - 1) *4, req.params.page*4)});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

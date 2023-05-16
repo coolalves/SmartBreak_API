@@ -123,13 +123,12 @@ router.get("/department/:id", verifyToken, async (req, res) => {
 
 
 //GET THE USERS BY PAGE
-router.get("/page/:page", verifyToken, async (req, res) => {
+router.get("department/:id/page/:page", verifyToken, async (req, res) => {
   try {
-    const users = await User.find();
-    // const users = await User.find({ department: req.params.id });
-    // if (users == null) {
-    //   return res.status(404).json({ message: "Cannot find users" });
-    // }
+    const users = await User.find({ department: req.params.id });
+    if (users == null) {
+      return res.status(404).json({ message: "Cannot find users" });
+    }
     if (isNaN(req.params.page))
       return res.status(400).json({ message: req.params.page + " is not a number" });
 

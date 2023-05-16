@@ -22,6 +22,7 @@ router.post("/register", async (req, res) => {
     admin: req.body.admin,
     department: req.body.department,
     created: created, //data de criação do user
+    connected_in: new Date(),
   });
   const missingFields = [];
 
@@ -82,6 +83,7 @@ router.post("/login", async (req, res) => {
 
   // guarda o token no documento
   user.token = token;
+  user.connected_in = new Date();
   await user.save();
 
   res.status(200).json({ message: "Logged in successfully", token });
@@ -94,7 +96,6 @@ router.post("/logout/:id", verifyToken, async (req, res) => {
   try {
     // encontra o user pelo id
     const user = await User.findById(id);
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

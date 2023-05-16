@@ -25,9 +25,15 @@ const usersSchema = new mongoose.Schema({
     },
     token:{
         type: String,
+        required: true,
         default: null,
     },
     created: {
+        type: Date,
+        required: true,
+        default: Date.now,
+    },
+    connected_in: {
         type: Date,
         required: true,
         default: Date.now,

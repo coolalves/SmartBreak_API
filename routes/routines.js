@@ -7,7 +7,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const routines = await Routine.find();
-    res.json(routines);
+    res.status(200).json({message: routines});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -24,7 +24,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newDevice = await routine.save();
-    res.status(201).json(newDevice);
+    res.status(201).json({message: newDevice});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -37,7 +37,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (routine == null) {
       return res.status(404).json({ message: "Cannot find routine" });
     }
-    res.json(routine);
+    res.status(200).json({message: routine});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -69,7 +69,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
   }
   try {
     const updateDevice = await res.routine.save();
-    res.json(updateDevice);
+    res.status(200).json({message: updateDevice});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -82,7 +82,7 @@ router.get("/user/:id", verifyToken, async (req, res) => {
     if (routines == null) {
       return res.status(404).json({ message: "Cannot find routines" });
     }
-    res.json(routines);
+    res.status(200).json({message: routines});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -92,7 +92,7 @@ router.get("/user/:id", verifyToken, async (req, res) => {
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Routine.findByIdAndRemove(req.params.id);
-    res.json({ message: "Routine Deleted" });
+    res.status(200).json({ message: "Routine Deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

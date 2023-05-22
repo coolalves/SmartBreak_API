@@ -10,7 +10,7 @@ router.get("/", verifyToken, async (req, res) => {
     if (users == null) {
       return res.status(404).json({ message: "Cannot find users" });
     }
-    res.json({message: users});
+    res.status(200).json({message: users});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -18,25 +18,7 @@ router.get("/", verifyToken, async (req, res) => {
 
 //GET ONE USER
 router.get("/:id", verifyToken, getUser, async (req, res) => {
-  res.send({message: res.user});
-});
-
-//ADD ONE USER
-router.post("/", verifyToken, async (req, res) => {
-  const user = new User({
-    name: req.body.name,
-    surname: req.body.surname,
-    email: req.body.email,
-    password: req.body.password,
-    admin: req.body.admin,
-    department: req.body.department,
-  });
-  try {
-    const newUser = await user.save();
-    res.status(201).json({status: 'OK',message: newUser});
-  } catch (err) {
-    res.status(400).json({status: 'ERROR', message: err.message });
-  }
+  res.status(200).json({message: res.user});
 });
 
 //UPDATE ONE USER
@@ -92,7 +74,7 @@ router.patch("/:id", verifyToken, getUser, async (req, res) => {
   }
   try {
     const updatedUser = await res.user.save();
-    res.json({message: updatedUser});
+    res.status(200).json({message: updatedUser});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -102,7 +84,7 @@ router.patch("/:id", verifyToken, getUser, async (req, res) => {
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await User.findByIdAndRemove(req.params.id);
-    res.json({ message: "User Deleted" });
+    res.status(200).json({ message: "User Deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -115,7 +97,7 @@ router.get("/department/:id", verifyToken, async (req, res) => {
     if (users == null) {
       return res.status(404).json({ message: "Cannot find users" });
     }
-    res.json({message: users});
+    res.status(200).json({message: users});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -134,7 +116,7 @@ router.get("/department/:id/page/:page", verifyToken, async (req, res) => {
 
     const totalPages = Math.floor(users.length/10) + 1 
 
-    res.json({total_pages: totalPages, results: users.slice((req.params.page - 1) *10, req.params.page*10)});
+    res.status(200).json({total_pages: totalPages, results: users.slice((req.params.page - 1) *10, req.params.page*10)});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

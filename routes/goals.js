@@ -7,7 +7,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const goals = await Goal.find();
-    res.json(goals);
+    res.status(200).json({message: goals});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -25,7 +25,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newGoal = await goal.save();
-    res.status(201).json(newGoal);
+    res.status(201).json({message: newGoal});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -35,7 +35,7 @@ router.post("/", verifyToken, async (req, res) => {
 router.get("/active", verifyToken, async (req, res) => {
   try {
     const goals = await Goal.find({ active: true });
-    res.json(goals);
+    res.status(200).json({message: goals});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -45,7 +45,7 @@ router.get("/active", verifyToken, async (req, res) => {
 router.get("/inactive", verifyToken, async (req, res) => {
   try {
     const goals = await Goal.find({ active: false });
-    res.json(goals);
+    res.status(200).json({message: goals});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -61,7 +61,7 @@ router.get("/destination/:id", verifyToken, async (req, res) => {
         goals.push(element);
       }
     });
-    res.json(goals);
+    res.status(200).json({message: goals});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -95,7 +95,7 @@ router.get("/destination/:id/filter/:filter", verifyToken, async (req, res) => {
   } else {
     return res.status(404).json({ message: "Cannot find filter" });
   }
-  res.json(goals);
+  res.status(200).json({message: goals, filter: filter});
 });
 
 //GET A SPECIFIC GOAL
@@ -105,7 +105,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (goals == null) {
       return res.status(404).json({ message: "Cannot find goal" });
     }
-    res.json(goals);
+    res.status(200).json({message: goals});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -143,7 +143,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
   }
   try {
     const updatedGoal = await res.goal.save();
-    res.json(updatedGoal);
+    res.status(200).json({message: updatedGoal});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -154,7 +154,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
   try {
     console.log(req.params.id);
     await Goal.findByIdAndRemove(req.params.id);
-    res.json({ message: "Goal Deleted" });
+    res.status(200).json({ message: "Goal Deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

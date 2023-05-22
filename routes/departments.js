@@ -7,7 +7,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const departments = await Department.find();
-    res.json(departments);
+    res.status(200).json({message: departments});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -22,7 +22,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newDepartment = await department.save();
-    res.status(201).json(newDepartment);
+    res.status(201).json({message: newDepartment});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -35,7 +35,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (departments == null) {
       return res.status(404).json({ message: "Cannot find department" });
     }
-    res.json(departments);
+    res.status(200).json({message: departments});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -65,7 +65,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
   }
   try {
     const updatedDepartment = await res.department.save();
-    res.json(updatedDepartment);
+    res.status(200).json({message: updatedDepartment});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -75,7 +75,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Department.findByIdAndRemove(req.params.id);
-    res.json({ message: "Department Deleted" });
+    res.status(200).json({ message: "Department Deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -88,7 +88,7 @@ router.get("/organization/:id", verifyToken, async (req, res) => {
     if (departments == null) {
       return res.status(404).json({ message: "Cannot find departments" });
     }
-    res.json(departments);
+    res.status(200).json({message: departments});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

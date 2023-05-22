@@ -1,0 +1,144 @@
+//TODO: Probably we need add a field to check if the account have permissions to view all users in database
+const { expect } = require('chai'); 
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+
+chai.use(chaiHttp);
+
+const email = 'abcd@smartbreak.com'
+const password = '123123123'
+const password_incorrect = '123'
+const token = ""
+const new_user = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name: 'User',
+    surname: 'Test',
+    email: email,
+    password: password,
+    admin: false,
+    department: 'Vendas'
+  }),
+}
+const new_user_missing_field = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name: 'User',
+    surname: 'Test',
+    email: "missingfields@smartbreak.com",
+    password: password,
+    admin: false
+  }),
+}
+const user_correct = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: email,
+    password: password
+  }),
+}
+const user_incorrect = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: email,
+    password: password_incorrect
+  }),
+}
+const user_nonexistent = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: "email@email.com",
+    password: password
+  }),
+}
+
+// 1. AUTH
+describe('test /auth', () => {
+  describe('auth /register', () => {
+    it('allow to create a new user', (done) => {
+      chai
+        .request('https://sb-api.herokuapp.com')
+        .post('/auth/register')
+        .send(new_user.body)
+        .end((err, res) => {
+          console.log(new_user.body)
+          console.log(res)
+          expect(res).to.have.status(201);
+          done();
+        });
+    });
+    it('prevent creating a user with an existing email', (done) => {
+      chai
+      .request('https://sb-api.herokuapp.com')
+      .post('/auth/register')
+      .send(new_user.body)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        done();
+      });  
+    });
+    it('prevent creating a user with missing fields', (done) => {
+      chai
+      .request('https://sb-api.herokuapp.com')
+      .post('/auth/register')
+      .send(new_user_missing_field.body)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        done();
+      });  
+    });
+  });
+  describe('auth /login', () => {
+    it("prevent logging in with an email that doesn't exist", (done) => {
+      chai
+      .request('https://sb-api.herokuapp.com')
+      .post('/auth/login')
+      .send(user_nonexistent.body)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        done();
+      });  
+    });
+    it("prevent logging in with a wrong password", (done) => {
+      chai
+      .request('https://sb-api.herokuapp.com')
+      .post('/auth/login')
+      .send(user_incorrect.body)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        done();
+      });  
+    });
+    it("allow user login", (done) => {
+      chai
+      .request('https://sb-api.herokuapp.com')
+      .post('/auth/login')
+      .send(user_correct.body)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        done();
+      });  
+    });
+  });
+});
+
+
+
+  
+// GET ONE USER
+// Need to check if the user can only access the information about themselves

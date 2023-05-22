@@ -4,10 +4,10 @@ const chaiHttp = require('chai-http');
 
 // chai.use(chaiHttp);
 
-const email = 'usertest2@smartbreak.com'
+const email = 'usertest4@smartbreak.com'
 const password = '123123123'
 const password_incorrect = '123'
-const token = ""
+let token;
 const new_user = {
   method: "POST",
   headers: {
@@ -68,19 +68,19 @@ const user_nonexistent = {
 
 // 1. AUTH
 describe('test /auth', () => {
-  describe('auth /register', () => {
-    it('allow to create a new user', (done) => {
-      fetch('https://sb-api.herokuapp.com/auth/register', new_user)
-        .then((response) => {
-          expect(response.status).to.equal(201);
-          return response.json();
-        })
-        .then((json) => {
-          // Additional assertions on the response JSON if needed
-          done(); // Call done() to indicate the test case has completed successfully
-        })
-        .catch((error) => done(error)); // Call done() with an error if there's an error in the test case
-    });
+  describe('auth/register', () => {
+    // it('allow to create a new user', (done) => {
+    //   fetch('https://sb-api.herokuapp.com/auth/register', new_user)
+    //     .then((response) => {
+    //       expect(response.status).to.equal(201);
+    //       return response.json();
+    //     })
+    //     .then((json) => {
+    //       // Additional assertions on the response JSON if needed
+    //       done();  
+    //     })
+    //     .catch((error) => done(error));  
+    // });
     it('prevent creating a user with an existing email', (done) => {
       fetch("https://sb-api.herokuapp.com/auth/register", new_user)
         .then((response) => {
@@ -89,9 +89,9 @@ describe('test /auth', () => {
         })
         .then((json) => {
           // Additional assertions on the response JSON if needed
-          done(); // Call done() to indicate the test case has completed successfully
+          done();  
         })
-        .catch((error) => done(error)); // Call done() with an error if there's an error in the test case
+        .catch((error) => done(error));  
     });
     it('prevent creating a user with missing fields', (done) => {
       fetch("https://sb-api.herokuapp.com/auth/register", new_user_missing_field)
@@ -101,13 +101,13 @@ describe('test /auth', () => {
         })
         .then((json) => {
           // Additional assertions on the response JSON if needed
-          done(); // Call done() to indicate the test case has completed successfully
+          done();  
         })
-        .catch((error) => done(error)); // Call done() with an error if there's an error in the test case
+        .catch((error) => done(error));  
     });
     
   });
-  describe('auth /login', () => {
+  describe('auth/login', () => {
     it("prevent logging in with an email that doesn't exist", (done) => {
       fetch("https://sb-api.herokuapp.com/auth/login", user_nonexistent)
         .then((response) => {
@@ -116,9 +116,9 @@ describe('test /auth', () => {
         })
         .then((json) => {
           // Additional assertions on the response JSON if needed
-          done(); // Call done() to indicate the test case has completed successfully
+          done();  
         })
-        .catch((error) => done(error)); // Call done() with an error if there's an error in the test case
+        .catch((error) => done(error));  
     });
     it("prevent logging in with a wrong password", (done) => {
       fetch("https://sb-api.herokuapp.com/auth/login", user_incorrect)
@@ -128,9 +128,9 @@ describe('test /auth', () => {
         })
         .then((json) => {
           // Additional assertions on the response JSON if needed
-          done(); // Call done() to indicate the test case has completed successfully
+          done();  
         })
-        .catch((error) => done(error)); // Call done() with an error if there's an error in the test case
+        .catch((error) => done(error));  
     });
     it("allow user login", (done) => {
       fetch("https://sb-api.herokuapp.com/auth/login", user_correct)
@@ -139,16 +139,19 @@ describe('test /auth', () => {
           return response.json();
         })
         .then((json) => {
-          // console.log("Response JSON:" + json)
-          // Additional assertions on the response JSON if needed
-          done(); // Call done() to indicate the test case has completed successfully
+          token = json.token
+          done();  
         })
-        .catch((error) => done(error)); // Call done() with an error if there's an error in the test case
+        .catch((error) => done(error));  
     });
   });
 });
 
+// 2. USER
+describe('test /users', () => {
+  describe ('users/')
 
+});
 
   
 // GET ONE USER

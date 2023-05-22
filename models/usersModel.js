@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 
 const usersSchema = new mongoose.Schema({
-    
+    access: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     name: {
         type: String,
         required: true,

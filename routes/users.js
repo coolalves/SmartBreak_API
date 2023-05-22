@@ -6,9 +6,7 @@ const verifyToken = require("../security/verifyToken");
 //GET ALL USERS
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.find({token : token})
+    const user = getUserByToken(req)
     if (!user[0].access)
       return res.status(403).json({ message: "Cannot access the content" });
 
@@ -22,9 +20,7 @@ router.get("/", verifyToken, async (req, res) => {
 //GET ONE USER
 router.get("/:id", verifyToken, async (req, res) => {
   try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.find({token : token})
+    const user = getUserByToken(req)
     if (user[0].id != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 
@@ -135,6 +131,12 @@ router.get("/department/:id/page/:page", verifyToken, async (req, res) => {
   }
 });
 
+async function getUserByToken(req) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  const user = await User.find({token : token})
+  return user;
+}
 
 
 async function getUser(req, res, next) {

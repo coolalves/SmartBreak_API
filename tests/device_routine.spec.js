@@ -3,7 +3,6 @@ const { expect } = require('chai');
 let token_with_access;
 let id_with_access;
 let new_device_id;
-
 const login_user_with_access = {
     method: "POST",
     headers: {
@@ -14,7 +13,6 @@ const login_user_with_access = {
         password: '123123123',
     }),
 }
-
 
 describe('test /devices', () => {
     describe('auth/login', () => {
@@ -57,6 +55,8 @@ describe('test /devices', () => {
                 })
                 .catch((error) => done(error));
         });
+    })
+    describe('devices/:id', () => {
         it("prevent getting a nonexistent device", (done) => {
             fetch("https://sb-api.herokuapp.com/devices/646000000000000000000000", {
                 method: "GET",
@@ -128,6 +128,25 @@ describe('test /devices', () => {
                 })
                 .catch((error) => done(error));
         });
+        it("allow the user to delete a device of their own", (done) => {
+            fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+    })
+    describe('devices/user/:id', () => {
         it("allow the user to get all of their own devices", (done) => {
             fetch("https://sb-api.herokuapp.com/devices/user/" + id_with_access, {
                 method: "GET",

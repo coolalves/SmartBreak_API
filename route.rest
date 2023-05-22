@@ -24,8 +24,8 @@ POST https://sb-api.herokuapp.com/auth/login
 Content-Type: application/json
 
 {
-    "email": "fulano2@sb.pt",
-    "password" : "1234"
+    "email": "email@email.com",
+    "password": 'password'
 
 }
 ###
@@ -52,7 +52,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY
 Content-Type: application/json
 
 {
-    "department" : "DECA",
+    "department" : "DECA"
 }
 ###
 DELETE http://localhost:4000/routines/6432080bcda4d8b5001a4c96

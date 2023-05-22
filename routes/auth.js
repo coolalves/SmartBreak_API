@@ -67,7 +67,6 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  const user_id = user.id;
 
   if (!user) {
     return res.status(400).json({ message: "Invalid email" });
@@ -88,6 +87,9 @@ router.post("/login", async (req, res) => {
   user.token = token;
   user.connected_in = new Date();
   await user.save();
+
+  
+  const user_id = user.id;
 
   res.status(200).json({ message: "Logged in successfully", token: token, id: user_id});
 });

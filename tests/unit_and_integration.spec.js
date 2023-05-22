@@ -288,6 +288,28 @@ describe('test /users', () => {
         })
         .catch((error) => done(error));
     });
+    // it("prevent user from deleting another user's account", (done) => {
+    //   fetch('https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82',
+    //     {
+    //       method: "PATCH",
+    //       headers: {
+    //         "Authorization": "Bearer " + token_with_access,
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         department: 'Marketing',
+    //       }),
+    //     })
+    //     .then((response) => {
+    //       expect(response.status).to.equal(200);
+    //       return response.json();
+    //     })
+    //     .then((json) => {
+    //       // Additional assertions on the response JSON if needed
+    //       done();
+    //     })
+    //     .catch((error) => done(error));
+    // });
   })
 
 });

@@ -1,13 +1,13 @@
 
 PATCH   http://localhost:4000/routines/6432080bcda4d8b5001a4c96
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI4NWFmMGZkZjYwZWIzNzExN2YxYiIsImlhdCI6MTY4NDc5ODYzMn0.mo-Vbjmdl9jCCp0ukiat1pawnxcAUMTXdVjc_2qKyvw
 Content-Type: application/json
 
 {
     "start" : "11:30",
     "end" : "11:40",
     "days" : [false, true, true, true, true, true, false ],
-    "state" : false,
-    "user" : "6424b27665ff3c56bc6e5a4fe"
+    "user" : "646b85af0fdf60eb37117f1b"
 }
 
 ###
@@ -17,6 +17,16 @@ Content-Type: application/json
 {
     "email": "geral@smartbreak.com",
     "password" : "123123123"
+
+}
+
+###
+POST https://sb-api.herokuapp.com/auth/login
+Content-Type: application/json
+
+{
+    "email": "fulano2@sb.pt",
+    "password" : "1234"
 
 }
 ###
@@ -46,8 +56,9 @@ Content-Type: application/json
 }
 
 ###
-GET  https://sb-api.herokuapp.com/devices/646bbcb4a4352fdf191f4e1f
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDc4MjI0Nn0.5KdZ1c8FshsGNpRm_Xuo4U7TgWZaZVnSKI1pN0UzgFU
+GET  https://sb-api.herokuapp.com/devices/user/646b7a61cec499ffa20b6e82
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDc5NjMxMX0.CuZQsTaxKiBtcIF3OHf9CMIaHuS7PmFGSCZnoxv63Z0
+
 
 ###
 PATCH  https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82

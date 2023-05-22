@@ -3,6 +3,7 @@ const { expect } = require('chai');
 let token_with_access;
 let id_with_access;
 let new_device_id;
+let new_routine_id;
 const login_user_with_access = {
     method: "POST",
     headers: {
@@ -166,6 +167,161 @@ describe('test /devices', () => {
         });
         it("prevent the user to get all of other user devices", (done) => {
             fetch("https://sb-api.herokuapp.com/devices/user/646b7a61cec499ffa20b6e83", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(403);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+    })
+})
+
+describe('test /routines', () => {
+    describe('routines/', () => {
+        it("allow user add routine", (done) => {
+            fetch("https://sb-api.herokuapp.com/routines", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    end: '1100',
+                    start: '1040',
+                    days: [false, false, true, true, false, true, false],
+                    user: id_with_access
+                })
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(201);
+                    return response.json();
+                })
+                .then((json) => {
+                    new_routine_id  = json.id
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+    })
+    describe('routines/:id', () => {
+        it("prevent getting a nonexistent routine", (done) => {
+            fetch("https://sb-api.herokuapp.com/routines/646000000000000000000000", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                }
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(404);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("prevent getting a routine from another user", (done) => {
+            fetch("https://sb-api.herokuapp.com/routines/646bfcdfd430e2e177f55ec9", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                }
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(403);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow user to get a routine of their own", (done) => {
+            fetch("https://sb-api.herokuapp.com/routines/" + new_routine_id, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                }
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow user to edit a routine of their own", (done) => {
+            fetch("https://sb-api.herokuapp.com/routines/" + new_routine_id, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    end: '1120',
+                }),
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow the user to delete a routine of their own", (done) => {
+            fetch("https://sb-api.herokuapp.com/routines/" + new_routine_id, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+    })
+    describe('routines/user/:id', () => {
+        it("allow the user to get all of their own routines", (done) => {
+            fetch("https://sb-api.herokuapp.com/routines/user/" + id_with_access, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("prevent the user to get all of other user routines", (done) => {
+            fetch("https://sb-api.herokuapp.com/routines/user/646b7a61cec499ffa20b6e83", {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,

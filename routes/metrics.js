@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Metric = require("../models/metricsModel");
+const User = require("../models/usersModel");
 const verifyToken = require("../security/verifyToken");
 
 //GET ALL METRICS
@@ -15,6 +16,12 @@ router.get("/", verifyToken, async (req, res) => {
 
 //ADD A METRIC
 router.post("/", verifyToken, async (req, res) => {
+   const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (!user.access)
+      return res.status(403).json({ message: "Cannot access the content" });
+
   const metric = new Metric({
     description: req.body.description,
     type: req.body.type,
@@ -31,7 +38,7 @@ router.post("/", verifyToken, async (req, res) => {
 router.get("/:id", verifyToken, async (req, res) => {
   try {
     const metrics = await Metric.findById(req.params.id);
-    if (metrics == null) {
+    if (!metrics) {
       return res.status(404).json({ message: "Cannot find metric" });
     }
     res.status(200).json({message: metrics});
@@ -43,6 +50,11 @@ router.get("/:id", verifyToken, async (req, res) => {
 //DELETE A SPECIFIC METRIC
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (!user.access)
+      return res.status(403).json({ message: "Cannot access the content" });
     console.log(req.params.id);
     await Metric.findByIdAndRemove(req.params.id);
     res.status(200).json({ message: "Metric Deleted" });

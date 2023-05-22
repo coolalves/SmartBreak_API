@@ -10,7 +10,7 @@ router.get("/", verifyToken, async (req, res) => {
     if (users == null) {
       return res.status(404).json({ message: "Cannot find users" });
     }
-    res.json(users);
+    res.json({message: users});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -18,7 +18,7 @@ router.get("/", verifyToken, async (req, res) => {
 
 //GET ONE USER
 router.get("/:id", verifyToken, getUser, async (req, res) => {
-  res.send(res.user);
+  res.send({message: res.user});
 });
 
 //ADD ONE USER
@@ -33,9 +33,9 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newUser = await user.save();
-    res.status(201).json(newUser);
+    res.status(201).json({status: 'OK',message: newUser});
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({status: 'ERROR', message: err.message });
   }
 });
 
@@ -92,7 +92,7 @@ router.patch("/:id", verifyToken, getUser, async (req, res) => {
   }
   try {
     const updatedUser = await res.user.save();
-    res.json(updatedUser);
+    res.json({message: updatedUser});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -115,7 +115,7 @@ router.get("/department/:id", verifyToken, async (req, res) => {
     if (users == null) {
       return res.status(404).json({ message: "Cannot find users" });
     }
-    res.json(users);
+    res.json({message: users});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

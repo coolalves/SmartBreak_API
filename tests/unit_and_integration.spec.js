@@ -6,6 +6,8 @@ const password = '123123123'
 const password_incorrect = 'abc'
 let token_with_access;
 let token_without_access;
+let id_with_access;
+let id_without_access;
 
 const login_user_with_access = {
   method: "POST",
@@ -149,6 +151,7 @@ describe('test /auth', () => {
         })
         .then((json) => {
           token_with_access = json.token
+          id_with_access = json.id
           done();
         })
         .catch((error) => done(error));
@@ -160,6 +163,7 @@ describe('test /auth', () => {
         })
         .then((json) => {
           token_without_access = json.token
+          id_without_access = json.id
           done();
         })
         .catch((error) => done(error));
@@ -209,7 +213,7 @@ describe('test /users', () => {
   })
   describe('users/:id', () => {
     it('user tries access information about themselves', (done) => {
-      fetch('https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82',
+      fetch('https://sb-api.herokuapp.com/users/' + id_with_access,
         {
           method: "GET",
           headers: {
@@ -227,7 +231,7 @@ describe('test /users', () => {
         .catch((error) => done(error));
     });
     it('user tries access information about another user', (done) => {
-      fetch('https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82',
+      fetch('https://sb-api.herokuapp.com/users/' + id_with_access,
         {
           method: "GET",
           headers: {
@@ -245,7 +249,7 @@ describe('test /users', () => {
         .catch((error) => done(error));
     });
     it('user tries edit information about other user', (done) => {
-      fetch('https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82',
+      fetch('https://sb-api.herokuapp.com/users/' + id_with_access,
         {
           method: "PATCH",
           headers: {
@@ -267,7 +271,7 @@ describe('test /users', () => {
         .catch((error) => done(error));
     });
     it('user tries edit information about themselves', (done) => {
-      fetch('https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82',
+      fetch('https://sb-api.herokuapp.com/users/' + id_with_access,
         {
           method: "PATCH",
           headers: {
@@ -288,28 +292,24 @@ describe('test /users', () => {
         })
         .catch((error) => done(error));
     });
-    // it("prevent user from deleting another user's account", (done) => {
-    //   fetch('https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82',
-    //     {
-    //       method: "PATCH",
-    //       headers: {
-    //         "Authorization": "Bearer " + token_with_access,
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //         department: 'Marketing',
-    //       }),
-    //     })
-    //     .then((response) => {
-    //       expect(response.status).to.equal(200);
-    //       return response.json();
-    //     })
-    //     .then((json) => {
-    //       // Additional assertions on the response JSON if needed
-    //       done();
-    //     })
-    //     .catch((error) => done(error));
-    // });
+    it("prevent user from deleting another user's account", (done) => {
+      fetch('https://sb-api.herokuapp.com/users/' + id_without_access,
+      {
+        method: "DELETE",
+        headers: {
+          "Authorization": "Bearer " + token_without_access,
+        }
+      })
+         .then((response) => {
+           expect(response.status).to.equal(200);
+           return response.json();
+         })
+         .then((json) => {
+           // Additional assertions on the response JSON if needed
+           done();
+         })
+         .catch((error) => done(error));
+     });
   })
 
 });

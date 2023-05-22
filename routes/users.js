@@ -35,7 +35,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 });
 
 //UPDATE ONE USER
-router.patch("/:id", verifyToken, async (req, res, next) => {
+router.patch("/:id", verifyToken, async (req, res) => {
   try {
     let user;
     const authHeader = req.headers["authorization"];
@@ -45,7 +45,6 @@ router.patch("/:id", verifyToken, async (req, res, next) => {
       return res.status(403).json({ message: "Cannot access the content" });
 
     res.user = user;
-    next();
     if (req.body.name != null) {
       res.user.name = req.body.name;
     }

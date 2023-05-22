@@ -9,7 +9,7 @@ router.get("/", verifyToken, async (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     const user = await User.find({token : token})
-    console.log(user.message.access)
+    console.log(user.message['access'])
 
     const users = await User.find();
     if (users == null) {

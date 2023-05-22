@@ -7,11 +7,11 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const user = getUserByToken(req)
-    if (!user[0].access)
-      return res.status(403).json({ message: "Cannot access the content" });
+    // if (!user[0].access)
+    //   return res.status(403).json({ message: "Cannot access the content" });
 
     const users = await User.find();
-    res.status(200).json({message: users});
+    res.status(200).json({message: user});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

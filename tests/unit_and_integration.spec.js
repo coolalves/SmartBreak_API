@@ -292,42 +292,42 @@ describe('test /users', () => {
         })
         .catch((error) => done(error));
     });
-    // it("prevent user from deleting another user's account", (done) => {
-    //   fetch('https://sb-api.herokuapp.com/users/' + id_without_access,
-    //     {
-    //       method: "DELETE",
-    //       headers: {
-    //         "Authorization": "Bearer " + token_with_access,
-    //       }
-    //     })
-    //     .then((response) => {
-    //       expect(response.status).to.equal(403);
-    //       return response.json();
-    //     })
-    //     .then((json) => {
-    //       // Additional assertions on the response JSON if needed
-    //       done();
-    //     })
-    //     .catch((error) => done(error));
-    // });
-    // it("alow user delete the account", (done) => {
-    //   fetch('https://sb-api.herokuapp.com/users/' + id_without_access,
-    //     {
-    //       method: "DELETE",
-    //       headers: {
-    //         "Authorization": "Bearer " + token_without_access,
-    //       }
-    //     })
-    //     .then((response) => {
-    //       expect(response.status).to.equal(200);
-    //       return response.json();
-    //     })
-    //     .then((json) => {
-    //       // Additional assertions on the response JSON if needed
-    //       done();
-    //     })
-    //     .catch((error) => done(error));
-    // });
+    it("prevent user from deleting another user's account", (done) => {
+      fetch('https://sb-api.herokuapp.com/users/' + id_without_access,
+        {
+          method: "DELETE",
+          headers: {
+            "Authorization": "Bearer " + token_with_access,
+          }
+        })
+        .then((response) => {
+          expect(response.status).to.equal(403);
+          return response.json();
+        })
+        .then((json) => {
+          // Additional assertions on the response JSON if needed
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it("alow user delete the account", (done) => {
+      fetch('https://sb-api.herokuapp.com/users/' + id_without_access,
+        {
+          method: "DELETE",
+          headers: {
+            "Authorization": "Bearer " + token_without_access,
+          }
+        })
+        .then((response) => {
+          expect(response.status).to.equal(200);
+          return response.json();
+        })
+        .then((json) => {
+          // Additional assertions on the response JSON if needed
+          done();
+        })
+        .catch((error) => done(error));
+    });
   })
 
 });

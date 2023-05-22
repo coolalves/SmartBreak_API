@@ -14,6 +14,7 @@ router.post("/register", async (req, res) => {
   const passwordToHash = req.body.password + created.toISOString(); //concatena a password com a data de criação do user
   const passwordHash = await bcrypt.hash(passwordToHash, salt); //encripta a password
 
+
   const user = new User({
     name: req.body.name,
     surname: req.body.surname,
@@ -23,6 +24,7 @@ router.post("/register", async (req, res) => {
     department: req.body.department,
     created: created, //data de criação do user
     connected_in: created,
+    access: req.body.access,
   });
   const missingFields = [];
 

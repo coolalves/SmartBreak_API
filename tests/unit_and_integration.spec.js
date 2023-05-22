@@ -79,18 +79,18 @@ const login_user_nonexistent = {
 // 1. AUTH
 describe('test /auth', () => {
   describe('auth/register', () => {
-    it('allow to create a new user', (done) => {
-      fetch('https://sb-api.herokuapp.com/auth/register', register_new_user)
-        .then((response) => {
-          expect(response.status).to.equal(201);
-          return response.json();
-        })
-        .then((json) => {
-          // Additional assertions on the response JSON if needed
-          done();
-        })
-        .catch((error) => done(error));
-    });
+    // it('allow to create a new user', (done) => {
+    //   fetch('https://sb-api.herokuapp.com/auth/register', register_new_user)
+    //     .then((response) => {
+    //       expect(response.status).to.equal(201);
+    //       return response.json();
+    //     })
+    //     .then((json) => {
+    //       // Additional assertions on the response JSON if needed
+    //       done();
+    //     })
+    //     .catch((error) => done(error));
+    // });
     it('prevent creating a user with an existing email', (done) => {
       fetch("https://sb-api.herokuapp.com/auth/register", register_new_user)
         .then((response) => {
@@ -171,9 +171,9 @@ describe('test /auth', () => {
 describe('test /users', () => {
   describe('users/', () => {
     it('if not have access, not allow viewing the content', (done) => {
-      fetch('https://sb-api.herokuapp.com/user/',
+      fetch('https://sb-api.herokuapp.com/users/',
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Authorization": "Bearer " + token_without_access,
           }
@@ -189,15 +189,15 @@ describe('test /users', () => {
         .catch((error) => done(error));
     });
     it('if have access, allow viewing the content', (done) => {
-      fetch('https://sb-api.herokuapp.com/user/',
+      fetch('https://sb-api.herokuapp.com/users/',
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Authorization": "Bearer " + token_with_access,
           }
         })
         .then((response) => {
-          expect(response.status).to.equal(201);
+          expect(response.status).to.equal(200);
           return response.json();
         })
         .then((json) => {

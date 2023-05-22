@@ -20,8 +20,18 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 //GET ONE USER
-router.get("/:id", verifyToken, getUser, async (req, res) => {
-  res.status(200).json({message: res.user});
+router.get("/:id", verifyToken, async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.find({token : token})
+    if (user[0].id != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
+    res.status(200).json({message: user});
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 //UPDATE ONE USER

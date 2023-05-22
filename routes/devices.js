@@ -9,8 +9,8 @@ router.get("/", verifyToken, async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.find({ token: token })
-    if (!user[0].access)
+    const user = await User.findOne({ token: token })
+    if (!user.access)
       return res.status(403).json({ message: "Cannot access the content" });
 
     const devices = await Device.find();
@@ -44,10 +44,17 @@ router.post("/", verifyToken, async (req, res) => {
 //GET A SPECIFIC DEVICE
 router.get("/:id", verifyToken, async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
     const device = await Device.findById(req.params.id);
-    if (device == null) {
+
+    if (!device) 
       return res.status(404).json({ message: "Cannot find device" });
-    }
+    
+    if (user.id != device.user) 
+      return res.status(403).json({ message: "Cannot access the content" });
+
     res.status(200).json({message: device});
   } catch (err) {
     res.status(500).json({ message: err.message });

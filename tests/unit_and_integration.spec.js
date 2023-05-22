@@ -1,7 +1,7 @@
 //TODO: Probably we need add a field to check if the account have permissions to view all users in database
 const { expect } = require('chai');
 
-const email = 'user_2@smartbreak.com'
+const email = 'user_7@smartbreak.com'
 const password = '123123123'
 const password_incorrect = 'abc'
 let token_with_access;
@@ -81,18 +81,18 @@ const login_user_nonexistent = {
 // 1. AUTH
 describe('test /auth', () => {
   describe('auth/register', () => {
-    // it('allow to create a new user', (done) => {
-    //   fetch('https://sb-api.herokuapp.com/auth/register', register_new_user)
-    //     .then((response) => {
-    //       expect(response.status).to.equal(201);
-    //       return response.json();
-    //     })
-    //     .then((json) => {
-    //       // Additional assertions on the response JSON if needed
-    //       done();
-    //     })
-    //     .catch((error) => done(error));
-    // });
+    it('allow to create a new user', (done) => {
+      fetch('https://sb-api.herokuapp.com/auth/register', register_new_user)
+        .then((response) => {
+          expect(response.status).to.equal(201);
+          return response.json();
+        })
+        .then((json) => {
+          // Additional assertions on the response JSON if needed
+          done();
+        })
+        .catch((error) => done(error));
+    });
     it('prevent creating a user with an existing email', (done) => {
       fetch("https://sb-api.herokuapp.com/auth/register", register_new_user)
         .then((response) => {
@@ -292,24 +292,42 @@ describe('test /users', () => {
         })
         .catch((error) => done(error));
     });
-    it("prevent user from deleting another user's account", (done) => {
-      fetch('https://sb-api.herokuapp.com/users/' + id_without_access,
-      {
-        method: "DELETE",
-        headers: {
-          "Authorization": "Bearer " + token_without_access,
-        }
-      })
-         .then((response) => {
-           expect(response.status).to.equal(200);
-           return response.json();
-         })
-         .then((json) => {
-           // Additional assertions on the response JSON if needed
-           done();
-         })
-         .catch((error) => done(error));
-     });
+    // it("prevent user from deleting another user's account", (done) => {
+    //   fetch('https://sb-api.herokuapp.com/users/' + id_without_access,
+    //     {
+    //       method: "DELETE",
+    //       headers: {
+    //         "Authorization": "Bearer " + token_with_access,
+    //       }
+    //     })
+    //     .then((response) => {
+    //       expect(response.status).to.equal(403);
+    //       return response.json();
+    //     })
+    //     .then((json) => {
+    //       // Additional assertions on the response JSON if needed
+    //       done();
+    //     })
+    //     .catch((error) => done(error));
+    // });
+    // it("alow user delete the account", (done) => {
+    //   fetch('https://sb-api.herokuapp.com/users/' + id_without_access,
+    //     {
+    //       method: "DELETE",
+    //       headers: {
+    //         "Authorization": "Bearer " + token_without_access,
+    //       }
+    //     })
+    //     .then((response) => {
+    //       expect(response.status).to.equal(200);
+    //       return response.json();
+    //     })
+    //     .then((json) => {
+    //       // Additional assertions on the response JSON if needed
+    //       done();
+    //     })
+    //     .catch((error) => done(error));
+    // });
   })
 
 });

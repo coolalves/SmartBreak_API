@@ -99,6 +99,12 @@ router.patch("/:id", verifyToken, async (req, res) => {
 //DELETE ONE USER
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (user.id != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
     await User.findByIdAndRemove(req.params.id);
     res.status(200).json({ message: "User Deleted" });
   } catch (err) {

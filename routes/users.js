@@ -6,6 +6,11 @@ const verifyToken = require("../security/verifyToken");
 //GET ALL USERS
 router.get("/", verifyToken, async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.find({token : token})
+    console.log(user)
+
     const users = await User.find();
     if (users == null) {
       return res.status(404).json({ message: "Cannot find users" });

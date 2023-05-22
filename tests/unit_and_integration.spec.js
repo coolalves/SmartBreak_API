@@ -1,7 +1,7 @@
 //TODO: Probably we need add a field to check if the account have permissions to view all users in database
 const { expect } = require('chai');
 
-const email = 'user_7@smartbreak.com'
+const email = 'user_13@smartbreak.com'
 const password = '123123123'
 const password_incorrect = 'abc'
 let token_with_access;
@@ -169,8 +169,8 @@ describe('test /auth', () => {
         .catch((error) => done(error));
     });
   });
-});
-
+  
+  
 // 2. USER
 describe('test /users', () => {
   describe('users/', () => {
@@ -332,6 +332,4 @@ describe('test /users', () => {
 
 });
 
-
-// GET ONE USER
-// Need to check if the user can only access the information about themselves
+});

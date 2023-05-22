@@ -15,7 +15,7 @@ router.get("/", verifyToken, async (req, res) => {
     if (users == null) {
       return res.status(404).json({ message: "Cannot find users" });
     }
-    res.status(200).json({message: user[0].message[0].access});
+    res.status(200).json({message: user.access});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

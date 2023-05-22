@@ -15,8 +15,8 @@ POST https://sb-api.herokuapp.com/auth/login
 Content-Type: application/json
 
 {
-    "email": "fulano@sb.pt",
-    "password" : "1234"
+    "email": "geral@smartbreak.com",
+    "password" : "123123123"
 
 }
 ###
@@ -34,8 +34,7 @@ Content-Type: application/json
 
 ###
 GET  https://sb-api.herokuapp.com/users/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjQwNmFiNTA0NDkyMjExZjVhNmIzYSIsImlhdCI6MTY4NDc2NTY5OX0.wN4ZW0kUVL4AopPD1YfCKSsX72bK0uWUb1hhspRONNs
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDc2NzEzM30.UmWVm2j-9dRQVeq8KkJqnYYn4EDzzh4-y1zYnqib73A
 
 ###
 DELETE http://localhost:4000/routines/6432080bcda4d8b5001a4c96

@@ -146,11 +146,11 @@ describe('test /auth', () => {
   });
 });
 
-// // 2. USER
-// describe('test /users', () => {
-//   describe('users/')
+// 2. USER
+describe('test /users', () => {
+  describe('users/')
 
-// });
+});
 
 
 // GET ONE USER

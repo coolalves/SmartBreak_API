@@ -9,13 +9,13 @@ router.get("/", verifyToken, async (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     const user = await User.find({token : token})
-    console.log(user.message)
+    console.log(user[0].message[0].access)
 
     const users = await User.find();
     if (users == null) {
       return res.status(404).json({ message: "Cannot find users" });
     }
-    res.status(200).json({message: user});
+    res.status(200).json({message: user[0].message[0].access});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -58,7 +58,7 @@ describe('test /devices', () => {
                 .catch((error) => done(error));
         });
         it("prevent getting a nonexistent device", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices/000", {
+            fetch("https://sb-api.herokuapp.com/devices/646000000000000000000000", {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
@@ -70,8 +70,6 @@ describe('test /devices', () => {
                     return response.json();
                 })
                 .then((json) => {
-                    token_with_access = json.token
-                    id_with_access = json.id
                     done();
                 })
                 .catch((error) => done(error));
@@ -89,14 +87,12 @@ describe('test /devices', () => {
                     return response.json();
                 })
                 .then((json) => {
-                    token_with_access = json.token
-                    id_with_access = json.id
                     done();
                 })
                 .catch((error) => done(error));
         });
         it("allow the user to get a device from themselves", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices/642444865e0aba6c620f0845", {
+            fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
@@ -104,12 +100,10 @@ describe('test /devices', () => {
                 }
             })
                 .then((response) => {
-                    expect(response.status).to.equal(201);
+                    expect(response.status).to.equal(200);
                     return response.json();
                 })
                 .then((json) => {
-                    token_with_access = json.token
-                    id_with_access = json.id
                     done();
                 })
                 .catch((error) => done(error));

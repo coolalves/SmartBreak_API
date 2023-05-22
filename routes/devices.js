@@ -35,7 +35,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newDevice = await device.save();
-    res.status(201).json({message: newDevice});
+    res.status(201).json({message: newDevice, id: newDevice._id});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

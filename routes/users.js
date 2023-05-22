@@ -35,7 +35,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 });
 
 //UPDATE ONE USER
-router.patch("/:id", verifyToken, async (req, res) => {
+router.patch("/:id", verifyToken, async (req, res, next) => {
   try {
     let user;
     const authHeader = req.headers["authorization"];

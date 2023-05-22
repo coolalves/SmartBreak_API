@@ -1,11 +1,33 @@
 //TODO: Probably we need add a field to check if the account have permissions to view all users in database
 const { expect } = require('chai');
 
-const email = 'geral@smartbreak.com'
+const email = 'user_2@smartbreak.com'
 const password = '123123123'
-const password_incorrect = '123'
-let token;
-const new_user = {
+const password_incorrect = 'abc'
+let token_with_access;
+let token_without_access;
+
+const login_user_with_access = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: 'geral@smartbreak.com',
+    password: '123123123',
+  }),
+}
+const login_user_without_access = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    email: email,
+    password: password,
+  }),
+}
+const register_new_user = {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -17,10 +39,10 @@ const new_user = {
     password: password,
     admin: false,
     department: 'Vendas',
-    access: true
+    access: false
   }),
 }
-const new_user_missing_field = {
+const register_new_user_missing_field = {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -30,21 +52,10 @@ const new_user_missing_field = {
     surname: 'Test',
     email: "missingfields@smartbreak.com",
     password: password,
-    admin: false,
-    access: true
+    admin: false
   }),
 }
-const user_correct = {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    email: email,
-    password: password,
-  }),
-}
-const user_incorrect = {
+const login_user_incorrect = {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -54,7 +65,7 @@ const user_incorrect = {
     password: password_incorrect,
   }),
 }
-const user_nonexistent = {
+const login_user_nonexistent = {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -69,7 +80,7 @@ const user_nonexistent = {
 describe('test /auth', () => {
   describe('auth/register', () => {
     it('allow to create a new user', (done) => {
-      fetch('https://sb-api.herokuapp.com/auth/register', new_user)
+      fetch('https://sb-api.herokuapp.com/auth/register', register_new_user)
         .then((response) => {
           expect(response.status).to.equal(201);
           return response.json();
@@ -81,7 +92,7 @@ describe('test /auth', () => {
         .catch((error) => done(error));
     });
     it('prevent creating a user with an existing email', (done) => {
-      fetch("https://sb-api.herokuapp.com/auth/register", new_user)
+      fetch("https://sb-api.herokuapp.com/auth/register", register_new_user)
         .then((response) => {
           expect(response.status).to.equal(400);
           return response.json();
@@ -93,7 +104,7 @@ describe('test /auth', () => {
         .catch((error) => done(error));
     });
     it('prevent creating a user with missing fields', (done) => {
-      fetch("https://sb-api.herokuapp.com/auth/register", new_user_missing_field)
+      fetch("https://sb-api.herokuapp.com/auth/register", register_new_user_missing_field)
         .then((response) => {
           expect(response.status).to.equal(400);
           return response.json();
@@ -104,11 +115,10 @@ describe('test /auth', () => {
         })
         .catch((error) => done(error));
     });
-
   });
   describe('auth/login', () => {
     it("prevent logging in with an email that doesn't exist", (done) => {
-      fetch("https://sb-api.herokuapp.com/auth/login", user_nonexistent)
+      fetch("https://sb-api.herokuapp.com/auth/login", login_user_nonexistent)
         .then((response) => {
           expect(response.status).to.equal(400);
           return response.json();
@@ -120,7 +130,7 @@ describe('test /auth', () => {
         .catch((error) => done(error));
     });
     it("prevent logging in with a wrong password", (done) => {
-      fetch("https://sb-api.herokuapp.com/auth/login", user_incorrect)
+      fetch("https://sb-api.herokuapp.com/auth/login", login_user_incorrect)
         .then((response) => {
           expect(response.status).to.equal(400);
           return response.json();
@@ -132,13 +142,24 @@ describe('test /auth', () => {
         .catch((error) => done(error));
     });
     it("allow user login", (done) => {
-      fetch("https://sb-api.herokuapp.com/auth/login", user_correct)
+      fetch("https://sb-api.herokuapp.com/auth/login", login_user_with_access)
         .then((response) => {
           expect(response.status).to.equal(200);
           return response.json();
         })
         .then((json) => {
-          token = json.token
+          token_with_access = json.token
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it("allow user login", (done) => {
+      fetch("https://sb-api.herokuapp.com/auth/login", login_user_without_access)
+        .then((response) => {
+          return response.json();
+        })
+        .then((json) => {
+          token_without_access = json.token
           done();
         })
         .catch((error) => done(error));
@@ -148,7 +169,44 @@ describe('test /auth', () => {
 
 // 2. USER
 describe('test /users', () => {
-  describe('users/')
+  describe('users/', () => {
+    it('if not have access, not allow viewing the content', (done) => {
+      fetch('https://sb-api.herokuapp.com/user/',
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token_without_access,
+          }
+        })
+        .then((response) => {
+          expect(response.status).to.equal(403);
+          return response.json();
+        })
+        .then((json) => {
+          // Additional assertions on the response JSON if needed
+          done();
+        })
+        .catch((error) => done(error));
+    });
+    it('if have access, allow viewing the content', (done) => {
+      fetch('https://sb-api.herokuapp.com/user/',
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token_with_access,
+          }
+        })
+        .then((response) => {
+          expect(response.status).to.equal(201);
+          return response.json();
+        })
+        .then((json) => {
+          // Additional assertions on the response JSON if needed
+          done();
+        })
+        .catch((error) => done(error));
+    });
+  })
 
 });
 

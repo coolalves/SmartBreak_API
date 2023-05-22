@@ -44,47 +44,49 @@ router.patch("/:id", verifyToken, async (req, res) => {
     if (user.id != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 
+    res.user = user;
+    next();
     if (req.body.name != null) {
-      user.name = req.body.name;
+      res.user.name = req.body.name;
     }
     if (req.body.surname != null) {
-      user.surname = req.body.surname;
+      res.user.surname = req.body.surname;
     }
     if (req.body.email != null) {
-      user.email = req.body.email;
+      res.user.email = req.body.email;
     }
     if (req.body.password != null) {
-      user.password = req.body.password;
+      res.user.password = req.body.password;
     }
     if (req.body.admin != null) {
-      user.admin = req.body.admin;
+      res.user.admin = req.body.admin;
     }
     if (req.body.battery != null) {
-      user.battery = req.body.battery;
+      res.user.battery = req.body.battery;
     }
     if (req.body.department != null) {
-      user.department = req.body.department;
+      res.user.department = req.body.department;
     }
     if (req.body.total_battery != null) {
-      user.total_battery = req.body.total_battery;
+      res.user.total_battery = req.body.total_battery;
     }
     if (req.body.pause != null) {
-      user.pause = req.body.pause;
+      res.user.pause = req.body.pause;
     }
     if (req.body.rewards != null) {
-      user.rewards = req.body.rewards;
+      res.user.rewards = req.body.rewards;
     }
     if (req.body.accessibility != null) {
-      user.accessibility = req.body.accessibility;
+      res.user.accessibility = req.body.accessibility;
     }
     if (req.body.notifications != null) {
-      user.notifications = req.body.notifications;
+      res.user.notifications = req.body.notifications;
     }
     if (req.body.permissions != null) {
-      user.permissions = req.body.permissions;
+      res.user.permissions = req.body.permissions;
     }
     try {
-      const updatedUser = await user.save();
+      const updatedUser = await res.user.save();
       res.status(200).json({ message: updatedUser });
     } catch (err) {
       res.status(400).json({ message: err.message });

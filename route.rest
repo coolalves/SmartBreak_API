@@ -24,7 +24,7 @@ POST https://sb-api.herokuapp.com/auth/login
 Content-Type: application/json
 
 {
-    "email": "fulano2@sb.com",
+    "email": "fulano2@sb.pt",
     "password" : "1234"
 
 }
@@ -43,8 +43,16 @@ Content-Type: application/json
 }
 
 ###
-GET  https://sb-api.herokuapp.com/users/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDc2NzEzM30.UmWVm2j-9dRQVeq8KkJqnYYn4EDzzh4-y1zYnqib73A
+GET  https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDc3MjcwMn0.OKnvGF7y_65iBxYbtLxFoV5yNePo1lPZ0pSlFRCnagc
 
+###
+PATCH  https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDc3MjcwMn0.OKnvGF7y_65iBxYbtLxFoV5yNePo1lPZ0pSlFRCnagc
+Content-Type: application/json
+
+{
+    "department" : "DECA",
+}
 ###
 DELETE http://localhost:4000/routines/6432080bcda4d8b5001a4c96

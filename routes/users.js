@@ -115,10 +115,14 @@ router.delete("/:id", verifyToken, async (req, res) => {
 //GET USERS FROM A DEPARTMENT
 router.get("/department/:id", verifyToken, async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+
+    if (user.department != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
     const users = await User.find({ department: req.params.id });
-    if (users == null) {
-      return res.status(404).json({ message: "Cannot find users" });
-    }
     res.status(200).json({ message: users });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -129,12 +133,17 @@ router.get("/department/:id", verifyToken, async (req, res) => {
 //GET THE USERS BY PAGE
 router.get("/department/:id/page/:page", verifyToken, async (req, res) => {
   try {
-    const users = await User.find({ department: req.params.id });
-    if (users == null) {
-      return res.status(404).json({ message: "Cannot find users" });
-    }
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    
+    if (user.department != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+   
     if (isNaN(req.params.page))
       return res.status(400).json({ message: req.params.page + " is not a number" });
+
+    const users = await User.find({ department: req.params.id });
 
     const totalPages = Math.floor(users.length / 10) + 1
 
@@ -143,21 +152,5 @@ router.get("/department/:id/page/:page", verifyToken, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-
-
-async function getUser(req, res, next) {
-  let user;
-  try {
-    user = await User.findById(req.params.id);
-    if (user == null) {
-      return res.status(404).json({ message: "Cannot find user" });
-    }
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-  res.user = user;
-  next();
-}
 
 module.exports = router;

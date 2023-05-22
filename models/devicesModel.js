@@ -15,7 +15,7 @@ const devicesSchema = new mongoose.Schema({
   },
   state: {
     type: Boolean,
-    required: true,
+    required: false,
     default: true
   },
   user: {

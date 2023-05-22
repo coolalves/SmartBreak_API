@@ -1,11 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const Device = require("../models/devicesModel");
+const User = require("../models/usersModel");
 const verifyToken = require("../security/verifyToken");
 
 //GET ALL DEVICES
 router.get("/", verifyToken, async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.find({ token: token })
+    if (!user[0].access)
+      return res.status(403).json({ message: "Cannot access the content" });
+
     const devices = await Device.find();
     res.status(200).json({message: devices});
   } catch (err) {
@@ -15,12 +22,16 @@ router.get("/", verifyToken, async (req, res) => {
 
 //ADD A DEVICE
 router.post("/", verifyToken, async (req, res) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    const user_id = user.id
+
   const device = new Device({
     name: req.body.name,
     energy: req.body.energy,
-    state: req.body.state,
     type: req.body.type,
-    user: req.body.user,
+    user: user_id,
   });
   try {
     const newDevice = await device.save();

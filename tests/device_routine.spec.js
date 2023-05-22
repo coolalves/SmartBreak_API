@@ -91,13 +91,50 @@ describe('test /devices', () => {
                 })
                 .catch((error) => done(error));
         });
-        it("allow the user to get a device from themselves", (done) => {
+        it("allow user to get a device of their own", (done) => {
             fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
                     "Content-Type": "application/json"
                 }
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow user to edit a device of their own", (done) => {
+            fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: 'new_name',
+                }),
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow the user to get all of their own devices", (done) => {
+            fetch("https://sb-api.herokuapp.com/devices/user/" + id_with_access, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
             })
                 .then((response) => {
                     expect(response.status).to.equal(200);

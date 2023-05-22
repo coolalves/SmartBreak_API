@@ -15,8 +15,7 @@ module.exports = function verifyToken(req, res, next) {
 
     // anexa o decoded payload ao request object
     req.user = decoded;
-    
-
+  
     next();
   } catch (err) {
     console.log(err);

@@ -7,7 +7,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const organizations = await Organization.find();
-    res.json(organizations);
+    res.status(200).json({message: organizations});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -22,7 +22,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newOrganization = await organization.save();
-    res.status(201).json(newOrganization);
+    res.status(201).json({message: newOrganization});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -35,7 +35,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (organization == null) {
       return res.status(404).json({ message: "Cannot find organization" });
     }
-    res.json(organization);
+    res.status(200).json({message: organization});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -67,7 +67,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
   }
   try {
     const updatedOrganization = await res.organization.save();
-    res.json(updatedOrganization);
+    res.status(200).json({message: updatedOrganization});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -77,7 +77,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Organization.findByIdAndRemove(req.params.id);
-    res.json({ message: "Organization Deleted" });
+    res.status(200).json({ message: "Organization Deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

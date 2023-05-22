@@ -7,7 +7,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const pauses = await Pause.find();
-    res.json(pauses);
+    res.status(200).json({message: pauses});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -22,7 +22,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newPause = await pause.save();
-    res.status(201).json(newPause);
+    res.status(201).json({message: newPause});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -35,7 +35,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (pause == null) {
       return res.status(404).json({ message: "Cannot find pause" });
     }
-    res.json(pause);
+    res.status(200).json({message: pause});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -64,7 +64,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
   }
   try {
     const updatedPause = await res.pause.save();
-    res.json(updatedPause);
+    res.status(200).json({message: updatedPause});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -77,7 +77,7 @@ router.get("/user/:id", verifyToken, async (req, res) => {
     if (pauses == null) {
       return res.status(404).json({ message: "Cannot find pauses" });
     }
-    res.json(pauses);
+    res.status(200).json({message: pauses});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -96,7 +96,7 @@ router.get("/user/:id/date/:date", verifyToken, async (req, res) => {
         pauses.push(element);
       }
     });
-    res.json(pauses);
+    res.status(200).json({message: pauses});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -106,7 +106,7 @@ router.get("/user/:id/date/:date", verifyToken, async (req, res) => {
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Pause.findByIdAndRemove(req.params.id);
-    res.json({ message: "Pause Deleted" });
+    res.status(200).json({ message: "Pause Deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

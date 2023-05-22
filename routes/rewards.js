@@ -7,7 +7,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const rewards = await Reward.find();
-    res.json(rewards);
+    res.status(200).json({message: rewards});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -21,7 +21,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newReward = await reward.save();
-    res.status(201).json(newReward);
+    res.status(201).json({message: newReward});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -34,7 +34,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (rewards == null) {
       return res.status(404).json({ message: "Cannot find reward" });
     }
-    res.json(rewards);
+    res.status(200).json({message: rewards});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -47,7 +47,7 @@ router.get("/type/:type", verifyToken, async (req, res) => {
     if (rewards == null) {
       return res.status(404).json({ message: "Cannot find rewards" });
     }
-    res.json(rewards);
+    res.status(200).json({message: rewards});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -73,7 +73,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
   }
   try {
     const updatedReward = await res.reward.save();
-    res.json(updatedReward);
+    res.status(200).json({message: updatedReward});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -84,7 +84,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
   try {
     console.log(req.params.id);
     await Reward.findByIdAndRemove(req.params.id);
-    res.json({ message: "Reward Deleted" });
+    res.status(200).json({ message: "Reward Deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

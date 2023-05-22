@@ -7,7 +7,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const metrics = await Metric.find();
-    res.json(metrics);
+    res.status(200).json({message: metrics});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -21,7 +21,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newMetric = await metric.save();
-    res.status(201).json(newMetric);
+    res.status(201).json({message: newMetric});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -34,7 +34,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (metrics == null) {
       return res.status(404).json({ message: "Cannot find metric" });
     }
-    res.json(metrics);
+    res.status(200).json({message: metrics});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -45,7 +45,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
   try {
     console.log(req.params.id);
     await Metric.findByIdAndRemove(req.params.id);
-    res.json({ message: "Metric Deleted" });
+    res.status(200).json({ message: "Metric Deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

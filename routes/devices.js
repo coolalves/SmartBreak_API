@@ -7,7 +7,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const devices = await Device.find();
-    res.json(devices);
+    res.status(200).json({message: devices});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -24,7 +24,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newDevice = await device.save();
-    res.status(201).json(newDevice);
+    res.status(201).json({message: newDevice});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -37,7 +37,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (device == null) {
       return res.status(404).json({ message: "Cannot find device" });
     }
-    res.json(device);
+    res.status(200).json({message: device});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -69,7 +69,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
   }
   try {
     const updateDevice = await res.device.save();
-    res.json(updateDevice);
+    res.status(200).json({message: updateDevice});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -82,7 +82,7 @@ router.get("/user/:id", verifyToken, async (req, res) => {
     if (devices == null) {
       return res.status(404).json({ message: "Cannot find devices" });
     }
-    res.json(devices);
+    res.status(200).json({message: devices});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -92,7 +92,7 @@ router.get("/user/:id", verifyToken, async (req, res) => {
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
     await Device.findByIdAndRemove(req.params.id);
-    res.json({ message: "Device Deleted" });
+    res.status(200).json({ message: "Device Deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }

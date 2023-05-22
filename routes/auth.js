@@ -52,9 +52,9 @@ router.post("/register", async (req, res) => {
   } else if (!userExists) {
     try {
       const newUser = await user.save();
-      res.status(201).json(newUser);
+      res.status(201).json({message: newUser});
     } catch (err) {
-      res.status(400).json({ message: err.message });
+      res.status(500).json({ message: err.message });
     }
   } else {
     return res.status(400).json({ message: "User already exists" });
@@ -67,14 +67,14 @@ router.post("/login", async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.status(400).json({ message: "Invalid email or password" });
+    return res.status(400).json({ message: "Invalid email" });
   }
 
   const passwordToCheck = password + user.created.toISOString(); //concatena a password com a data de criação do user
   const isMatch = await bcrypt.compare(passwordToCheck, user.password); //compara a password encriptada com a password inserida
 
   if (!isMatch) {
-    return res.status(400).json({ message: "Invalid email or password" }); //se não for igual, retorna erro
+    return res.status(400).json({ message: "Invalid password" }); //se não for igual, retorna erro
   }
 
   // gera o token
@@ -86,7 +86,7 @@ router.post("/login", async (req, res) => {
   user.connected_in = new Date();
   await user.save();
 
-  res.status(200).json({ message: "Logged in successfully", token });
+  res.status(200).json({ message: "Logged in successfully", token: token });
 });
 
 // Logout user
@@ -120,7 +120,7 @@ router.get("/users/:id", verifyToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     } else {
-      return res.status(200).json(user);
+      return res.status(200).json({message: user});
     }
   } catch (err) {
     return res.status(500).json({ message: err.message });

@@ -119,6 +119,17 @@ router.get("/user/:id", verifyToken, async (req, res) => {
 //DELETE A SPECIFIC DEVICE
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    const device = await Device.findById(req.params.id);
+
+    if (!device)
+      return res.status(404).json({ message: "Cannot find device" });
+
+    if (user.id != device.user)
+      return res.status(403).json({ message: "Cannot access the content" });
+
     await Device.findByIdAndRemove(req.params.id);
     res.status(200).json({ message: "Device Deleted" });
   } catch (err) {

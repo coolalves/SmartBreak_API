@@ -145,5 +145,22 @@ describe('test /devices', () => {
                 })
                 .catch((error) => done(error));
         });
+        it("prevent the user to get all of other user devices", (done) => {
+            fetch("https://sb-api.herokuapp.com/devices/user/646b7a61cec499ffa20b6e83", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(403);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
     })
 })

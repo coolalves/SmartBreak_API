@@ -244,6 +244,24 @@ describe('test /users', () => {
         })
         .catch((error) => done(error));
     });
+    it('user tries edit information about other user', (done) => {
+      fetch('https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82',
+        {
+          method: "PATCH",
+          headers: {
+            "Authorization": "Bearer " + token_without_access,
+          }
+        })
+        .then((response) => {
+          expect(response.status).to.equal(403);
+          return response.json();
+        })
+        .then((json) => {
+          // Additional assertions on the response JSON if needed
+          done();
+        })
+        .catch((error) => done(error));
+    });
   })
 
 });

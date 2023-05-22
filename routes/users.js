@@ -24,8 +24,8 @@ router.get("/:id", verifyToken, async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.find({ token: token })
-    if (user[0].id != req.params.id)
+    const user = await User.findOne({ token: token })
+    if (user.id != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 
     res.status(200).json({ message: user });
@@ -40,52 +40,51 @@ router.patch("/:id", verifyToken, async (req, res) => {
     let user;
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    user = await User.find({ token: token })
-    if (user[0].id != req.params.id)
+    user = await User.findOne({ token: token })
+    if (user.id != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 
-    res.user = user;
     if (req.body.name != null) {
-      res.user.name = req.body.name;
+      user.name = req.body.name;
     }
     if (req.body.surname != null) {
-      res.user.surname = req.body.surname;
+      user.surname = req.body.surname;
     }
     if (req.body.email != null) {
-      res.user.email = req.body.email;
+      user.email = req.body.email;
     }
     if (req.body.password != null) {
-      res.user.password = req.body.password;
+      user.password = req.body.password;
     }
     if (req.body.admin != null) {
-      res.user.admin = req.body.admin;
+      user.admin = req.body.admin;
     }
     if (req.body.battery != null) {
-      res.user.battery = req.body.battery;
+      user.battery = req.body.battery;
     }
     if (req.body.department != null) {
-      res.user.department = req.body.department;
+      user.department = req.body.department;
     }
     if (req.body.total_battery != null) {
-      res.user.total_battery = req.body.total_battery;
+      user.total_battery = req.body.total_battery;
     }
     if (req.body.pause != null) {
-      res.user.pause = req.body.pause;
+      user.pause = req.body.pause;
     }
     if (req.body.rewards != null) {
-      res.user.rewards = req.body.rewards;
+      user.rewards = req.body.rewards;
     }
     if (req.body.accessibility != null) {
-      res.user.accessibility = req.body.accessibility;
+      user.accessibility = req.body.accessibility;
     }
     if (req.body.notifications != null) {
-      res.user.notifications = req.body.notifications;
+      user.notifications = req.body.notifications;
     }
     if (req.body.permissions != null) {
-      res.user.permissions = req.body.permissions;
+      user.permissions = req.body.permissions;
     }
     try {
-      const updatedUser = await res.user.save();
+      const updatedUser = await user.save();
       res.status(200).json({ message: updatedUser });
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -139,5 +138,19 @@ router.get("/department/:id/page/:page", verifyToken, async (req, res) => {
 });
 
 
+
+async function getUser(req, res, next) {
+  let user;
+  try {
+    user = await User.findById(req.params.id);
+    if (user == null) {
+      return res.status(404).json({ message: "Cannot find user" });
+    }
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+  res.user = user;
+  next();
+}
 
 module.exports = router;

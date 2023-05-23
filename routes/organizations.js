@@ -7,7 +7,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const organizations = await Organization.find();
-    res.status(200).json({message: organizations});
+    res.status(200).json({message: organizations, total: organization.length});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

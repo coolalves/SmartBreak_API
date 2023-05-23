@@ -528,6 +528,39 @@ describe('test /goals', () => {
         });
     })
     describe('goals/destination/:id', () => {
-
+        it("prevent user to get a goals information if doesn't belong to goal destination", (done) => {
+            fetch("https://sb-api.herokuapp.com/goals/destination/" + department_with_access, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_without_access,
+                    "Content-Type": "application/json"
+                }
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(403);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow user to get a goals information if belongs to goal destination", (done) => {
+            fetch("https://sb-api.herokuapp.com/goals/destination/" + department_with_access + "/inactive", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                }
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
     })
 })

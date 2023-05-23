@@ -8,7 +8,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const tips = await Tip.find();
-    res.status(200).json({message : tips});
+    res.status(200).json({message : tips, total: tips.length});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -38,7 +38,7 @@ router.post("/", verifyToken, async (req, res) => {
 router.get("/:type", verifyToken, async (req, res) => {
   try {
     const tips = await Tip.find({ type: req.params.type });
-    res.status(200).json({message: tips});
+    res.status(200).json({message: tips, total: tips.length});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

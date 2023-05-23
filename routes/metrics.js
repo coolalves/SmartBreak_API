@@ -8,7 +8,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const metrics = await Metric.find();
-    res.status(200).json({ message: metrics });
+    res.status(200).json({ message: metrics, total: metrics.length });
   } catch (err) {
     res.status(500).json({ message: err.message});
   }

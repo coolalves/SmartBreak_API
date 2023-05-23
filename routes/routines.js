@@ -14,7 +14,7 @@ router.get("/", verifyToken, async (req, res) => {
       return res.status(403).json({ message: "Cannot access the content" });
 
     const routines = await Routine.find();
-    res.status(200).json({ message: routines });
+    res.status(200).json({ message: routines, total: routines.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -111,7 +111,7 @@ router.get("/user/:id", verifyToken, async (req, res) => {
     if (!routines)
       return res.status(404).json({ message: "Cannot find routines" });
 
-    res.status(200).json({ message: routines });
+    res.status(200).json({ message: routines, total: routines.length});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

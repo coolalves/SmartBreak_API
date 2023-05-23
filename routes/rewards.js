@@ -14,7 +14,7 @@ router.get("/", verifyToken, async (req, res) => {
       return res.status(403).json({ message: "Cannot access the content" });
 
     const rewards = await Reward.find();
-    res.status(200).json({ message: rewards });
+    res.status(200).json({ message: rewards, total: rewards.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -66,7 +66,7 @@ router.get("/type/:type", verifyToken, async (req, res) => {
     if (!rewards) {
       return res.status(404).json({ message: "Cannot find rewards" });
     }
-    res.status(200).json({ message: rewards });
+    res.status(200).json({ message: rewards, total: rewards.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

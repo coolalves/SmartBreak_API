@@ -13,7 +13,7 @@ router.get("/", verifyToken, async (req, res) => {
       return res.status(403).json({ message: "Cannot access the content" });
 
     const users = await User.find();
-    res.status(200).json({ message: users });
+    res.status(200).json({ message: users, total: users.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -123,7 +123,7 @@ router.get("/department/:id", verifyToken, async (req, res) => {
       return res.status(403).json({ message: "Cannot access the content" });
 
     const users = await User.find({ department: req.params.id });
-    res.status(200).json({ message: users });
+    res.status(200).json({ message: users, total: users.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

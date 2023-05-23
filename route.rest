@@ -1,5 +1,5 @@
 
-PATCH   http://localhost:4000/routines/6432080bcda4d8b5001a4c96
+POST  https://sb-api.herokuapp.com/routines
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI4NWFmMGZkZjYwZWIzNzExN2YxYiIsImlhdCI6MTY4NDc5ODYzMn0.mo-Vbjmdl9jCCp0ukiat1pawnxcAUMTXdVjc_2qKyvw
 Content-Type: application/json
 
@@ -20,6 +20,8 @@ Content-Type: application/json
 
 }
 
+//646b7a61cec499ffa20b6e82
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDg0OTg0Nn0.bJIVwjKOWFK4qgtEGgh4MgsZ8sbZmOY1uIoHiJlzsyk
 ###
 POST https://sb-api.herokuapp.com/auth/login
 Content-Type: application/json
@@ -46,10 +48,10 @@ POST  https://sb-api.herokuapp.com/auth/register
 Content-Type: application/json
 
 {
-    "email": "fulano2@sb.pt",
-    "password" : "1234",
-    "name" : "Fulano",
-    "surname" : "Ciclano",
+    "email": "without_access@smartbreak.com",
+    "password" : "123123123",
+    "name" : "User",
+    "surname" : "Test",
     "admin" : false,
     "department" : "DECA",
     "access" : false
@@ -57,7 +59,7 @@ Content-Type: application/json
 
 ###
 GET  https://sb-api.herokuapp.com/devices/user/646b7a61cec499ffa20b6e82
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDc5NjMxMX0.CuZQsTaxKiBtcIF3OHf9CMIaHuS7PmFGSCZnoxv63Z0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDg0OTg0Nn0.bJIVwjKOWFK4qgtEGgh4MgsZ8sbZmOY1uIoHiJlzsyk
 
 
 ###
@@ -69,4 +71,5 @@ Content-Type: application/json
     "department" : "DECA"
 }
 ###
-DELETE http://localhost:4000/routines/6432080bcda4d8b5001a4c96
+DELETE https://sb-api.herokuapp.com/devices/646bb6e2b58368db79223658
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDg0OTg0Nn0.bJIVwjKOWFK4qgtEGgh4MgsZ8sbZmOY1uIoHiJlzsyk

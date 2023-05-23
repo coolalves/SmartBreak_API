@@ -104,7 +104,7 @@ describe('test /devices', () => {
             fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer " + token_with_access,
+                    "Authorization": "Bearer " + token_without_access,
                     "Content-Type": "application/json"
                 }
             })
@@ -208,7 +208,7 @@ describe('test /devices', () => {
                 .catch((error) => done(error));
         });
         it("prevent the user to get all of other user devices", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices/user/646b7a61cec499ffa20b6e83", {
+            fetch("https://sb-api.herokuapp.com/devices/user/" + id_without_access, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
@@ -335,7 +335,7 @@ describe('test /routines', () => {
                 },
             })
                 .then((response) => {
-                    expect(response.status).to.equal(200);
+                    expect(response.status).to.equal(403);
                     return response.json();
                 })
                 .then((json) => {
@@ -380,7 +380,7 @@ describe('test /routines', () => {
                 .catch((error) => done(error));
         });
         it("prevent the user to get all of other user routines", (done) => {
-            fetch("https://sb-api.herokuapp.com/routines/user/646b7a61cec499ffa20b6e83", {
+            fetch("https://sb-api.herokuapp.com/routines/user/" + id_without_access, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,

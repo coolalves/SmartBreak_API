@@ -24,7 +24,7 @@ const login_user_without_access = {
     },
     body: JSON.stringify({
         email: "without_access@smartbreak.com",
-        password : "123123123",
+        password: "123123123",
     }),
 }
 
@@ -60,51 +60,50 @@ describe('test /pauses', () => {
     describe('pauses/', () => {
         it('if not have access, not allow viewing the content', (done) => {
             fetch('https://sb-api.herokuapp.com/pauses/',
-              {
-                method: "GET",
-                headers: {
-                  "Authorization": "Bearer " + token_without_access,
-                }
-              })
-              .then((response) => {
-                expect(response.status).to.equal(403);
-                return response.json();
-              })
-              .then((json) => {
-                // Additional assertions on the response JSON if needed
-                done();
-              })
-              .catch((error) => done(error));
-          });
-          it('if have access, allow viewing the content', (done) => {
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token_without_access,
+                    }
+                })
+                .then((response) => {
+                    expect(response.status).to.equal(403);
+                    return response.json();
+                })
+                .then((json) => {
+                    // Additional assertions on the response JSON if needed
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it('if have access, allow viewing the content', (done) => {
             fetch('https://sb-api.herokuapp.com/pauses/',
-              {
-                method: "GET",
-                headers: {
-                  "Authorization": "Bearer " + token_with_access,
-                }
-              })
-              .then((response) => {
-                expect(response.status).to.equal(200);
-                return response.json();
-              })
-              .then((json) => {
-                // Additional assertions on the response JSON if needed
-                done();
-              })
-              .catch((error) => done(error));
-          });
-
+                {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + token_with_access,
+                    }
+                })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    // Additional assertions on the response JSON if needed
+                    done();
+                })
+                .catch((error) => done(error));
+        });
         it("allow user add pause", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices", {
+            fetch("https://sb-api.herokuapp.com/pause", {
                 method: "POST",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    start_date: 1519211809934,
-                    end_date: 1519215809934,
+                    start_date: '2023-03-20T10:00:00.000+00:00',
+                    end_date: '2023-03-20T10:10:00.000+00:00',
                     user: id_with_access
                 })
             })
@@ -113,7 +112,7 @@ describe('test /pauses', () => {
                     return response.json();
                 })
                 .then((json) => {
-                    new_pause_id  = json.id
+                    new_pause_id = json.id
                     done();
                 })
                 .catch((error) => done(error));
@@ -137,11 +136,11 @@ describe('test /pauses', () => {
                 })
                 .catch((error) => done(error));
         });
-        it("prevent getting a device from another user", (done) => {
+        it("prevent getting a pause from another user", (done) => {
             fetch("https://sb-api.herokuapp.com/pauses/" + new_pause_id, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer " + token_with_access,
+                    "Authorization": "Bearer " + token_without_access,
                     "Content-Type": "application/json"
                 }
             })
@@ -154,8 +153,8 @@ describe('test /pauses', () => {
                 })
                 .catch((error) => done(error));
         });
-        it("allow user to get a device of their own", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
+        it("allow user to get a pause of their own", (done) => {
+            fetch("https://sb-api.herokuapp.com/pauses/" + new_pause_id, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
@@ -171,15 +170,15 @@ describe('test /pauses', () => {
                 })
                 .catch((error) => done(error));
         });
-        it("allow user to edit a device of their own", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
+        it("allow user to edit a pause of their own", (done) => {
+            fetch("https://sb-api.herokuapp.com/pauses/" + new_pause_id, {
                 method: "PATCH",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    name: 'new_name',
+                    end_date: '2023-03-20T10:20:00.000+00:00',
                 }),
             })
                 .then((response) => {
@@ -191,8 +190,25 @@ describe('test /pauses', () => {
                 })
                 .catch((error) => done(error));
         });
-        it("allow the user to delete a device of their own", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
+        it("prevent the user to delete a pause of another user", (done) => {
+            fetch("https://sb-api.herokuapp.com/pauses/" + new_pause_id, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token_without_access,
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow the user to delete a pause of their own", (done) => {
+            fetch("https://sb-api.herokuapp.com/pauses/" + new_pause_id, {
                 method: "DELETE",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
@@ -209,9 +225,9 @@ describe('test /pauses', () => {
                 .catch((error) => done(error));
         });
     })
-    describe('devices/user/:id', () => {
-        it("allow the user to get all of their own devices", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices/user/" + id_with_access, {
+    describe('pauses/user/:id', () => {
+        it("allow the user to get all of their own pauses", (done) => {
+            fetch("https://sb-api.herokuapp.com/pauses/user/" + id_with_access, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
@@ -227,8 +243,8 @@ describe('test /pauses', () => {
                 })
                 .catch((error) => done(error));
         });
-        it("prevent the user to get all of other user devices", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices/user/646b7a61cec499ffa20b6e83", {
+        it("prevent the user to get all of other user pauses", (done) => {
+            fetch("https://sb-api.herokuapp.com/pauses/user/" + id_without_access, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,

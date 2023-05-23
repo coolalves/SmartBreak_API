@@ -116,7 +116,7 @@ describe('test /departments', () => {
                     return response.json();
                 })
                 .then((json) => {
-                    new_organization_id = json.id
+                    new_department_id = json.id
                     done();
                 })
                 .catch((error) => done(error));
@@ -135,7 +135,7 @@ describe('test /departments', () => {
                 })
             })
                 .then((response) => {
-                    expect(response.status).to.equal(201);
+                    expect(response.status).to.equal(403);
                     return response.json();
                 })
                 .then((json) => {
@@ -205,7 +205,7 @@ describe('test /departments', () => {
                 }
             })
                 .then((response) => {
-                    expect(response.status).to.equal(200);
+                    expect(response.status).to.equal(403);
                     return response.json();
                 })
                 .then((json) => {
@@ -214,7 +214,7 @@ describe('test /departments', () => {
                 .catch((error) => done(error));
         });
         it("allow user to edit a department if admin", (done) => {
-            fetch("https://sb-api.herokuapp.com/departments/" + new_pause_id, {
+            fetch("https://sb-api.herokuapp.com/departments/" + new_department_id, {
                 method: "PATCH",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,

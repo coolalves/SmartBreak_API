@@ -33,7 +33,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newDepartment = await department.save();
-    res.status(201).json({ message: newDepartment });
+    res.status(201).json({ message: newDepartment, id: newDepartment._id  });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

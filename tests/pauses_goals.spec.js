@@ -8,7 +8,8 @@ let new_pause_id;
 let new_goal_id;
 let organization_with_access;
 let organization_without_access;
-let department = "DEMAT"
+let department_with_access;
+let department_without_access;
 
 const login_user_with_access = {
     method: "POST",
@@ -44,6 +45,7 @@ describe('test /pauses', () => {
                     token_with_access = json.token
                     id_with_access = json.id
                     organization_with_access = json.organization
+                    department_with_access = json.department
                     done();
                 })
                 .catch((error) => done(error));
@@ -57,6 +59,8 @@ describe('test /pauses', () => {
                 .then((json) => {
                     token_without_access = json.token
                     id_without_access = json.id
+                    organization_without_access = json.organization
+                    department_without_access = json.department
                     done();
                 })
                 .catch((error) => done(error));
@@ -269,94 +273,171 @@ describe('test /pauses', () => {
 })
 
 describe('test /goals', () => {
-    it('if not have access, not allow viewing the content', (done) => {
-        fetch('https://sb-api.herokuapp.com/goals/',
-            {
-                method: "GET",
+    describe('goals/', () => {
+        // it('if not have access, not allow viewing the content', (done) => {
+        //     fetch('https://sb-api.herokuapp.com/goals/',
+        //         {
+        //             method: "GET",
+        //             headers: {
+        //                 "Authorization": "Bearer " + token_without_access,
+        //             }
+        //         })
+        //         .then((response) => {
+        //             expect(response.status).to.equal(403);
+        //             return response.json();
+        //         })
+        //         .then((json) => {
+        //             // Additional assertions on the response JSON if needed
+        //             done();
+        //         })
+        //         .catch((error) => done(error));
+        // });
+        // it('if have access, allow viewing the content', (done) => {
+        //     fetch('https://sb-api.herokuapp.com/goals/',
+        //         {
+        //             method: "GET",
+        //             headers: {
+        //                 "Authorization": "Bearer " + token_with_access,
+        //             }
+        //         })
+        //         .then((response) => {
+        //             expect(response.status).to.equal(200);
+        //             return response.json();
+        //         })
+        //         .then((json) => {
+        //             // Additional assertions on the response JSON if needed
+        //             done();
+        //         })
+        //         .catch((error) => done(error));
+        // });
+        // it("prevent user to add goal if is not admin", (done) => {
+        //     fetch("https://sb-api.herokuapp.com/goals", {
+        //         method: "POST",
+        //         headers: {
+        //             "Authorization": "Bearer " + token_without_access,
+        //             "Content-Type": "application/json"
+        //         },
+        //         body: JSON.stringify({
+        //             description: "Reduzir gastos em 20%",
+        //             destination: department_without_access,
+        //             organization: organization_without_access,
+        //             priority: 1,
+        //             date: "2023-07-30T00:00:00.000+00:00",
+        //             types: "Computer",
+        //             active: true,
+        //         })
+        //     })
+        //         .then((response) => {
+        //             expect(response.status).to.equal(403);
+        //             return response.json();
+        //         })
+        //         .then((json) => {
+        //             done();
+        //         })
+        //         .catch((error) => done(error));
+        // });
+        it("allow user to add goal if is admin", (done) => {
+            fetch("https://sb-api.herokuapp.com/goals", {
+                method: "POST",
                 headers: {
-                    "Authorization": "Bearer " + token_without_access,
-                }
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    description: "Reduzir gastos em 20%",
+                    destination: department_with_access,
+                    organization: organization_with_access,
+                    priority: 1,
+                    date: "2023-07-30T00:00:00.000+00:00",
+                    types: "Computer",
+                    active: true,
+                })
             })
-            .then((response) => {
-                expect(response.status).to.equal(403);
-                return response.json();
-            })
-            .then((json) => {
-                // Additional assertions on the response JSON if needed
-                done();
-            })
-            .catch((error) => done(error));
-    });
-    it('if have access, allow viewing the content', (done) => {
-        fetch('https://sb-api.herokuapp.com/goals/',
-            {
+                .then((response) => {
+                    expect(response.status).to.equal(201);
+                    return response.json();
+                })
+                .then((json) => {
+                    new_goal_id = json.id
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+    })
+    describe('goals/:id', () => {
+        it("allow user to get a goal information if destination includes the user id ", (done) => {
+            fetch("https://sb-api.herokuapp.com/goals/" + new_goal_id, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("prevent user to get a goal information if destination doesn't include the user id ", (done) => {
+            fetch("https://sb-api.herokuapp.com/goals/" + new_goal_id, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token_without_access,
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(403);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow user to edit a goal information if is admin ", (done) => {
+            fetch("https://sb-api.herokuapp.com/goals/" + new_goal_id, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                },
+                body: {
+                    description: "Reduzir gastos em 10%",
                 }
             })
-            .then((response) => {
-                expect(response.status).to.equal(200);
-                return response.json();
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("prevent user to edit a goal information if isn't admin ", (done) => {
+            fetch("https://sb-api.herokuapp.com/goals/" + new_goal_id, {
+                method: "PATCH",
+                headers: {
+                    "Authorization": "Bearer " + token_without_access,
+                    "Content-Type": "application/json"
+                },
+                body: {
+                    description: "Reduzir gastos em 10%",
+                }
             })
-            .then((json) => {
-                // Additional assertions on the response JSON if needed
-                done();
-            })
-            .catch((error) => done(error));
-    });
-    it("prevent user add goal if is not admin", (done) => {
-        fetch("https://sb-api.herokuapp.com/goals", {
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer " + token_without_access,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                description: "Reduzir gastos em 20%",
-                destination: department,
-                organization: organization_with_access,
-                priority: 1,
-                date: "2023-07-30T00:00:00.000+00:00",
-                types: "Computer",
-                active: true,
-            })
-        })
-            .then((response) => {
-                expect(response.status).to.equal(403);
-                return response.json();
-            })
-            .then((json) => {
-                new_pause_id = json.id
-                done();
-            })
-            .catch((error) => done(error));
-    });
-    it("allow user add goal if is admin", (done) => {
-        fetch("https://sb-api.herokuapp.com/goals", {
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer " + token_with_access,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                description: "Reduzir gastos em 20%",
-                destination: department,
-                organization: organization_with_access,
-                priority: 1,
-                date: "2023-07-30T00:00:00.000+00:00",
-                types: "Computer",
-                active: true,
-            })
-        })
-            .then((response) => {
-                expect(response.status).to.equal(201);
-                return response.json();
-            })
-            .then((json) => {
-                new_pause_id = json.id
-                done();
-            })
-            .catch((error) => done(error));
-    });
+                .then((response) => {
+                    expect(response.status).to.equal(403);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+    })
 })

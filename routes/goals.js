@@ -165,6 +165,9 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (!goal)
       return res.status(404).json({ message: "Cannot find goal" });
 
+    if (goal.organization != user.organization)
+      return res.status(403).json({ message: "Cannot access the content" });
+
     if (!goal.destination.includes(user.id) && !goal.destination.includes(user.department))
       return res.status(403).json({ message: "Cannot access the content" });
 

@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 
-const email = 'user_test_1@smartbreak.com'
+const email = 'user_test_2@smartbreak.com'
 const password = '123123123'
 const password_incorrect = 'abc'
 const new_department = "DECA"

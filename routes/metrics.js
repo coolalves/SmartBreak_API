@@ -8,7 +8,7 @@ const verifyToken = require("../security/verifyToken");
 router.get("/", verifyToken, async (req, res) => {
   try {
     const metrics = await Metric.find();
-    res.status(200).json({message: metrics});
+    res.status(200).json({ message: metrics });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -16,11 +16,11 @@ router.get("/", verifyToken, async (req, res) => {
 
 //ADD A METRIC
 router.post("/", verifyToken, async (req, res) => {
-   const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.findOne({ token: token })
-    if (!user.access)
-      return res.status(403).json({ message: "Cannot access the content" });
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  const user = await User.findOne({ token: token })
+  if (!user.access)
+    return res.status(403).json({ message: "Cannot access the content" });
 
   const metric = new Metric({
     description: req.body.description,
@@ -28,7 +28,7 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newMetric = await metric.save();
-    res.status(201).json({message: newMetric});
+    res.status(201).json({ message: newMetric, id: newMetric._id });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -41,7 +41,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (!metrics) {
       return res.status(404).json({ message: "Cannot find metric" });
     }
-    res.status(200).json({message: metrics});
+    res.status(200).json({ message: metrics });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -55,7 +55,6 @@ router.delete("/:id", verifyToken, async (req, res) => {
     const user = await User.findOne({ token: token })
     if (!user.access)
       return res.status(403).json({ message: "Cannot access the content" });
-    console.log(req.params.id);
     await Metric.findByIdAndRemove(req.params.id);
     res.status(200).json({ message: "Metric Deleted" });
   } catch (err) {

@@ -125,7 +125,10 @@ router.get("/destination/:id/inactive", verifyToken, async (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     const user = await User.findOne({ token: token })
-    if (user.id != req.params.id && !user.department != req.params.id)
+    if (user.id != req.params.id)
+      return res.status(403).json({ message: "NOT ADMIN. Cannot access the content" });
+
+    if (!user.department != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 
     let goals = [];

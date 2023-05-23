@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const Goal = require("../models/goalsModel");
+const User = require("../models/usersModel");
 const verifyToken = require("../security/verifyToken");
 
 //GET ALL GOALS
 router.get("/", verifyToken, async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (!user.access)
+      return res.status(403).json({ message: "Cannot access the content" });
     const goals = await Goal.find();
     res.status(200).json({message: goals});
   } catch (err) {

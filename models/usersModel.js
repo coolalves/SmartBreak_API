@@ -61,7 +61,10 @@ const usersSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-   
+    organization: {
+        type: String,
+        required: true,
+    },
     rewards: {
         type: Array,
         required: true,

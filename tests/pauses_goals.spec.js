@@ -95,7 +95,7 @@ describe('test /pauses', () => {
                 .catch((error) => done(error));
         });
         it("allow user add pause", (done) => {
-            fetch("https://sb-api.herokuapp.com/pause", {
+            fetch("https://sb-api.herokuapp.com/pauses", {
                 method: "POST",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
@@ -199,7 +199,7 @@ describe('test /pauses', () => {
                 },
             })
                 .then((response) => {
-                    expect(response.status).to.equal(200);
+                    expect(response.status).to.equal(403);
                     return response.json();
                 })
                 .then((json) => {

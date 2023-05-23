@@ -22,6 +22,7 @@ router.post("/register", async (req, res) => {
     password: passwordHash,
     admin: req.body.admin,
     department: req.body.department,
+    organization: req.body.organization,
     created: created, //data de criação do user
     connected_in: created,
     access: req.body.access,

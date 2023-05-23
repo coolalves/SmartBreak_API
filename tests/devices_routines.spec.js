@@ -1,7 +1,9 @@
 const { expect } = require('chai');
 
 let token_with_access;
+let token_without_access;
 let id_with_access;
+let id_without_access;
 let new_device_id;
 let new_routine_id;
 const login_user_with_access = {
@@ -14,10 +16,20 @@ const login_user_with_access = {
         password: '123123123',
     }),
 }
+const login_user_without_access = {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+        email: "without_access@smartbreak.com",
+        password : "123123123",
+    }),
+}
 
 describe('test /devices', () => {
     describe('auth/login', () => {
-        it("allow user login", (done) => {
+        it("allow user with access login", (done) => {
             fetch("https://sb-api.herokuapp.com/auth/login", login_user_with_access)
                 .then((response) => {
                     expect(response.status).to.equal(200);
@@ -26,6 +38,19 @@ describe('test /devices', () => {
                 .then((json) => {
                     token_with_access = json.token
                     id_with_access = json.id
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow user without access login", (done) => {
+            fetch("https://sb-api.herokuapp.com/auth/login", login_user_without_access)
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    token_without_access = json.token
+                    id_without_access = json.id
                     done();
                 })
                 .catch((error) => done(error));
@@ -76,7 +101,7 @@ describe('test /devices', () => {
                 .catch((error) => done(error));
         });
         it("prevent getting a device from another user", (done) => {
-            fetch("https://sb-api.herokuapp.com/devices/642444865e0aba6c620f0845", {
+            fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,
@@ -122,6 +147,23 @@ describe('test /devices', () => {
             })
                 .then((response) => {
                     expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("prevent the user to delete a device from another user", (done) => {
+            fetch("https://sb-api.herokuapp.com/devices/" + new_device_id, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token_without_access,
+                    "Content-Type": "application/json"
+                },
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(403);
                     return response.json();
                 })
                 .then((json) => {
@@ -231,10 +273,10 @@ describe('test /routines', () => {
                 .catch((error) => done(error));
         });
         it("prevent getting a routine from another user", (done) => {
-            fetch("https://sb-api.herokuapp.com/routines/646bfcdfd430e2e177f55ec9", {
+            fetch("https://sb-api.herokuapp.com/routines/" + new_routine_id, {
                 method: "GET",
                 headers: {
-                    "Authorization": "Bearer " + token_with_access,
+                    "Authorization": "Bearer " + token_without_access,
                     "Content-Type": "application/json"
                 }
             })
@@ -274,6 +316,23 @@ describe('test /routines', () => {
                 body: JSON.stringify({
                     end: '1120',
                 }),
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("prevent the user to delete a routine of another user", (done) => {
+            fetch("https://sb-api.herokuapp.com/routines/" + new_routine_id, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token_without_access,
+                    "Content-Type": "application/json"
+                },
             })
                 .then((response) => {
                     expect(response.status).to.equal(200);

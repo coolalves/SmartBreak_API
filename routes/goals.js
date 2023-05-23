@@ -230,6 +230,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
     if (!user.admin)
       return res.status(403).json({ message: "Cannot access the content" });
 
+    const goal = await Goal.findById(req.params.id);
     if (goal.organization != user.organization)
       return res.status(403).json({ message: "Cannot access the content" });
     

@@ -127,7 +127,7 @@ router.get("/destination/:id/inactive", verifyToken, async (req, res) => {
     const user = await User.findOne({ token: token })
 
     if (!user.department != req.params.id)
-      return res.status(403).json({ details: req.params.id, details2: user.department, message: "Cannot access the content" });
+      return res.status(403).json({ DEP_ID: req.params.id, DEP_USER: user.department, message: "Cannot access the content" });
 
     let goals = [];
     const elements = await Goal.find({ organization: user.organization });

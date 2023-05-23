@@ -13,7 +13,7 @@ router.get("/", verifyToken, async (req, res) => {
     if (!user.access)
       return res.status(403).json({ message: "Cannot access the content" });
     const goals = await Goal.find();
-    res.status(200).json({ message: goals });
+    res.status(200).json({ message: goals,total: goals.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -56,7 +56,7 @@ router.get("/organization/:id", verifyToken, async (req, res) => {
       return res.status(403).json({ message: "Cannot access the content" });
 
     const goals = await Goal.find({ organization: req.params.id });
-    res.status(200).json({ message: goals });
+    res.status(200).json({ message: goals, total: goals.length});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -74,7 +74,7 @@ router.get("/organization/:id/active", verifyToken, async (req, res) => {
       return res.status(403).json({ message: "Cannot access the content" });
 
     const goals = await Goal.find({ organization: req.params.id, active: true });
-    res.status(200).json({ message: goals });
+    res.status(200).json({ message: goals, total: goals.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -92,7 +92,7 @@ router.get("/organization/:id/inactive", verifyToken, async (req, res) => {
       return res.status(403).json({ message: "Cannot access the content" });
 
     const goals = await Goal.find({ organization: req.params.id, active: false });
-    res.status(200).json({ message: goals });
+    res.status(200).json({ message: goals, total: goals.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -113,7 +113,7 @@ router.get("/destination/:id/active", verifyToken, async (req, res) => {
       if (element.destination.includes(req.params.id) && (element.active))
         goals.push(element);
     });
-    res.status(200).json({ message: goals });
+    res.status(200).json({ message: goals, total: goals.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -135,7 +135,7 @@ router.get("/destination/:id/inactive", verifyToken, async (req, res) => {
         goals.push(element);
     });
 
-    res.status(200).json({ message: goals });
+    res.status(200).json({ message: goals, total: goals.length});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -173,7 +173,7 @@ router.get("/destination/:id/filter/:filter", verifyToken, async (req, res) => {
   } else {
     return res.status(404).json({ message: "Cannot find filter" });
   }
-  res.status(200).json({ message: goals, filter: filter });
+  res.status(200).json({ message: goals, filter: filter , total: goals.length});
 });
 
 //GET A SPECIFIC GOAL

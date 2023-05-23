@@ -10,7 +10,7 @@ router.get("/", verifyToken, async (req, res) => {
     const metrics = await Metric.find();
     res.status(200).json({ message: metrics });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: err.message});
   }
 });
 

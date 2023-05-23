@@ -37,11 +37,11 @@ router.post("/", verifyToken, async (req, res) => {
 //GET A SPECIFIC METRIC
 router.get("/:id", verifyToken, async (req, res) => {
   try {
-    const metrics = await Metric.findById(req.params.id);
-    if (!metrics) {
+    const metric = await Metric.findById(req.params.id);
+    if (!metric) {
       return res.status(404).json({ message: "Cannot find metric" });
     }
-    res.status(200).json({ message: metrics });
+    res.status(200).json({ message: metric });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

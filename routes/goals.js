@@ -68,6 +68,8 @@ router.get("/organization/:id/active", verifyToken, async (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     const user = await User.findOne({ token: token })
+    if (!user.admin)
+      return res.status(403).json({ message: "Cannot access the content" });
     if (user.organization != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 
@@ -84,6 +86,8 @@ router.get("/organization/:id/inactive", verifyToken, async (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     const user = await User.findOne({ token: token })
+    if (!user.admin)
+      return res.status(403).json({ message: "Cannot access the content" });
     if (user.organization != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 

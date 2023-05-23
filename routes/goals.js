@@ -44,7 +44,25 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
-// GET ACTIVE GOALS
+// GET ORGANIZATION GOALS
+router.get("/organization/:id", verifyToken, async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (!user.admin)
+      return res.status(403).json({ message: "Cannot access the content" });
+    if (user.organization != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
+    const goals = await Goal.find({ organization: req.params.id });
+    res.status(200).json({ message: goals });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET ORGANIZATION ACTIVE GOALS
 router.get("/organization/:id/active", verifyToken, async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
@@ -60,7 +78,7 @@ router.get("/organization/:id/active", verifyToken, async (req, res) => {
   }
 });
 
-// GET INACTIVE GOALS
+// GET ORGANIZATION INACTIVE GOALS
 router.get("/organization/:id/inactive", verifyToken, async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];

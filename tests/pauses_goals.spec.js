@@ -399,7 +399,7 @@ describe('test /goals', () => {
                 })
                 .catch((error) => done(error));
         });
-        it("allow user to edit a goal information if is admin ", (done) => {
+        it("allow user to edit a goal information if is admin and goals belongs to user organization", (done) => {
             fetch("https://sb-api.herokuapp.com/goals/" + new_goal_id, {
                 method: "PATCH",
                 headers: {
@@ -439,5 +439,40 @@ describe('test /goals', () => {
                 })
                 .catch((error) => done(error));
         });
+        it("prevent user to delete a goal if isn't admin and goals doesn't belong to user organization", (done) => {
+            fetch("https://sb-api.herokuapp.com/goals/" + new_goal_id, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token_without_access,
+                    "Content-Type": "application/json"
+                }
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(403);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        it("allow user to delete a goal information if is admin and goals belong to user organization", (done) => {
+            fetch("https://sb-api.herokuapp.com/goals/" + new_goal_id, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + token_with_access,
+                    "Content-Type": "application/json"
+                }
+            })
+                .then((response) => {
+                    expect(response.status).to.equal(200);
+                    return response.json();
+                })
+                .then((json) => {
+                    done();
+                })
+                .catch((error) => done(error));
+        });
+        
     })
 })

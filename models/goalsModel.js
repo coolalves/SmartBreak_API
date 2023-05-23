@@ -31,7 +31,7 @@ const goalsSchema = new mongoose.Schema({
     },
     organization: {
         type: String,
-        required: true,
+        required: true
     }
 }, { collection: 'Goals' })
 

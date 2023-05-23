@@ -28,6 +28,10 @@ const goalsSchema = new mongoose.Schema({
     types: {
         type: Array,
         required: true,
+    },
+    organization: {
+        type: String,
+        required: true,
     }
 }, { collection: 'Goals' })
 

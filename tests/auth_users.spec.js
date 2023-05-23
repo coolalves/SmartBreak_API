@@ -41,6 +41,7 @@ const register_new_user = {
     password: password,
     admin: false,
     department: 'Vendas',
+    organization: 'UA',
     access: false
   }),
 }

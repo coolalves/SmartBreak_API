@@ -13,7 +13,7 @@ router.get("/", verifyToken, async (req, res) => {
     if (!user.access)
       return res.status(403).json({ message: "Cannot access the content" });
     const goals = await Goal.find();
-    res.status(200).json({message: goals});
+    res.status(200).json({ message: goals });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -21,9 +21,16 @@ router.get("/", verifyToken, async (req, res) => {
 
 //ADD A GOAL
 router.post("/", verifyToken, async (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  const user = await User.findOne({ token: token })
+  if (!user.admin)
+    return res.status(403).json({ message: "Cannot access the content" });
+
   const goal = new Goal({
     description: req.body.description,
     destination: req.body.destination,
+    organization: user.organization,
     priority: req.body.priority,
     date: req.body.date,
     types: req.body.types,
@@ -31,43 +38,82 @@ router.post("/", verifyToken, async (req, res) => {
   });
   try {
     const newGoal = await goal.save();
-    res.status(201).json({message: newGoal});
+    res.status(201).json({ message: newGoal, id: newGoal._id });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
 // GET ACTIVE GOALS
-router.get("/active", verifyToken, async (req, res) => {
+router.get("/organization/:id/active", verifyToken, async (req, res) => {
   try {
-    const goals = await Goal.find({ active: true });
-    res.status(200).json({message: goals});
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (user.organization != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
+    const goals = await Goal.find({ organization: req.params.id, active: true });
+    res.status(200).json({ message: goals });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
 // GET INACTIVE GOALS
-router.get("/inactive", verifyToken, async (req, res) => {
+router.get("/organization/:id/inactive", verifyToken, async (req, res) => {
   try {
-    const goals = await Goal.find({ active: false });
-    res.status(200).json({message: goals});
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (user.organization != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
+    const goals = await Goal.find({ organization: req.params.id, active: false });
+    res.status(200).json({ message: goals });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// GET USER_ID/DEPARTMENT_ID GOALS
-router.get("/destination/:id", verifyToken, async (req, res) => {
+// GET USER_ID/DEPARTMENT_ID GOALS ACTIVE
+router.get("/destination/:id/active", verifyToken, async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (user.id != req.params.id && !user.department != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
     let goals = [];
-    const elements = await Goal.find();
+    const elements = await Goal.find({ organization: user.organization });
     elements.forEach((element) => {
-      if (element.destination.includes(req.params.id)) {
+      if (element.destination.includes(req.params.id) && (element.active))
         goals.push(element);
-      }
     });
-    res.status(200).json({message: goals});
+    res.status(200).json({ message: goals });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET USER_ID/DEPARTMENT_ID GOALS INACTIVE
+router.get("/destination/:id/inactive", verifyToken, async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (user.id != req.params.id && !user.department != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
+    let goals = [];
+    const elements = await Goal.find({ organization: user.organization });
+    elements.forEach((element) => {
+      if (element.destination.includes(req.params.id) && (!element.active))
+        goals.push(element);
+    });
+
+    res.status(200).json({ message: goals });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -75,20 +121,24 @@ router.get("/destination/:id", verifyToken, async (req, res) => {
 
 // GET GOALS SORT BY FILTER
 router.get("/destination/:id/filter/:filter", verifyToken, async (req, res) => {
-  let filter = req.params.filter;
-  let destination_id = req.params.id;
   let goals = [];
-
   try {
-    const elements = await Goal.find();
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    if (user.id != req.params.id && !user.department != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
+    const elements = await Goal.find({ organization: user.organization });
     elements.forEach((element) => {
-      if (element.destination.includes(destination_id)) {
+      if (element.destination.includes(req.params.id) && (element.active))
         goals.push(element);
-      }
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+
+  let filter = req.params.filter;
 
   if (filter == 0) {
     goals.sort((a, b) => a.date - b.date);
@@ -101,17 +151,24 @@ router.get("/destination/:id/filter/:filter", verifyToken, async (req, res) => {
   } else {
     return res.status(404).json({ message: "Cannot find filter" });
   }
-  res.status(200).json({message: goals, filter: filter});
+  res.status(200).json({ message: goals, filter: filter });
 });
 
 //GET A SPECIFIC GOAL
 router.get("/:id", verifyToken, async (req, res) => {
   try {
-    const goals = await Goal.findById(req.params.id);
-    if (goals == null) {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+
+    const goal = await Goal.findById(req.params.id);
+    if (!goal)
       return res.status(404).json({ message: "Cannot find goal" });
-    }
-    res.status(200).json({message: goals});
+
+    if (!goal.destination.includes(user.id) && !goal.destination.includes(user.department))
+      return res.status(403).json({ message: "Cannot access the content" });
+
+    res.status(200).json({ message: goal });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -119,46 +176,54 @@ router.get("/:id", verifyToken, async (req, res) => {
 
 //EDIT A SPECIFIC GOAL
 router.patch("/:id", verifyToken, async (req, res) => {
-  let goal;
   try {
-    goal = await Goal.findById(req.params.id);
-    if (goal == null) {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+
+    if (!user.admin)
+      return res.status(403).json({ message: "Cannot access the content" });
+
+    const goal = await Goal.findById(req.params.id);
+    if (!goal)
       return res.status(404).json({ message: "Cannot find goal" });
+
+    res.goal = goal;
+    if (req.body.description != null) {
+      res.goal.description = req.body.description;
     }
+    if (req.body.destination != null) {
+      res.goal.destination = req.body.destination;
+    }
+    if (req.body.priority != null) {
+      res.goal.priority = req.body.priority;
+    }
+    if (req.body.date != null) {
+      res.goal.date = req.body.date;
+    }
+    if (req.body.active != null) {
+      res.goal.active = req.body.active;
+    }
+    if (req.body.types != null) {
+      res.goal.types = req.body.types;
+    }
+    const updatedGoal = await res.goal.save();
+    res.status(200).json({ message: updatedGoal });
   } catch (err) {
     return res.status(500).json({ message: err.message });
-  }
-  res.goal = goal;
-  if (req.body.description != null) {
-    res.goal.description = req.body.description;
-  }
-  if (req.body.destination != null) {
-    res.goal.destination = req.body.destination;
-  }
-  if (req.body.priority != null) {
-    res.goal.priority = req.body.priority;
-  }
-  if (req.body.date != null) {
-    res.goal.date = req.body.date;
-  }
-  if (req.body.active != null) {
-    res.goal.active = req.body.active;
-  }
-  if (req.body.types != null) {
-    res.goal.types = req.body.types;
-  }
-  try {
-    const updatedGoal = await res.goal.save();
-    res.status(200).json({message: updatedGoal});
-  } catch (err) {
-    res.status(400).json({ message: err.message });
   }
 });
 
 //DELETE A SPECIFIC GOAL
 router.delete("/:id", verifyToken, async (req, res) => {
   try {
-    console.log(req.params.id);
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+
+    if (!user.admin)
+      return res.status(403).json({ message: "Cannot access the content" });
+    
     await Goal.findByIdAndRemove(req.params.id);
     res.status(200).json({ message: "Goal Deleted" });
   } catch (err) {

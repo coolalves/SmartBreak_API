@@ -90,7 +90,7 @@ router.post("/login", async (req, res) => {
   await user.save();
 
 
-  res.status(200).json({ message: "Logged in successfully", token: token, id: user.id, organization: user.organization});
+  res.status(200).json({ message: "Logged in successfully", token: token, id: user.id, organization: user.organization, department: user.department});
 });
 
 // Logout user

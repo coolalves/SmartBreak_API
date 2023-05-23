@@ -406,9 +406,9 @@ describe('test /goals', () => {
                     "Authorization": "Bearer " + token_with_access,
                     "Content-Type": "application/json"
                 },
-                body: {
+                body: JSON.stringify({
                     description: "Reduzir gastos em 10%",
-                }
+                })
             })
                 .then((response) => {
                     expect(response.status).to.equal(200);
@@ -419,16 +419,16 @@ describe('test /goals', () => {
                 })
                 .catch((error) => done(error));
         });
-        it("prevent user to edit a goal information if isn't admin ", (done) => {
+        it("prevent user to edit a goal information if isn't admin and goals doesn't belong to user organization", (done) => {
             fetch("https://sb-api.herokuapp.com/goals/" + new_goal_id, {
                 method: "PATCH",
                 headers: {
                     "Authorization": "Bearer " + token_without_access,
                     "Content-Type": "application/json"
                 },
-                body: {
+                body: JSON.stringify({
                     description: "Reduzir gastos em 10%",
-                }
+                })
             })
                 .then((response) => {
                     expect(response.status).to.equal(403);

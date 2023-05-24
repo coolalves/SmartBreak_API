@@ -57,8 +57,8 @@ Content-Type: application/json
 }
 
 ###
-GET https://sb-api.herokuapp.com/goals/destination/646b7a61cec499ffa20b6e82/active
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDg1OTI4MX0.1YtO-67jGAbPD8vkxG8ghtCPO-ZnwPIAgfqTbDA2DI0
+GET https://sb-api.herokuapp.com/departments/organization
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDg4NTc2Mn0.XPldIFKag1lpcBh7RWOJ5ZJKcK4tkCKjEwkOI5pUuSI
 
 
 ###

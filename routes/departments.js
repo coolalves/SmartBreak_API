@@ -117,7 +117,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
 });
 
 //GET DEPARTMENTS FROM ORGANIZATION X
-router.get("/organization", verifyToken, async (req, res) => {
+router.get("/organization/admin", verifyToken, async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];

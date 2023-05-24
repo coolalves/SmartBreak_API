@@ -270,7 +270,7 @@ describe('test /departments', () => {
     })
     describe('departments/organization', () => {
         it("allow the user to get all of departments if belongs to user organization", (done) => {
-            fetch("https://sb-api.herokuapp.com/departments/organization/" , {
+            fetch("https://sb-api.herokuapp.com/departments/organization" , {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + token_with_access,

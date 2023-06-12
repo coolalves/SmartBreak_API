@@ -14,7 +14,6 @@ router.post("/register", async (req, res) => {
   const passwordToHash = req.body.password + created.toISOString(); //concatena a password com a data de criação do user
   const passwordHash = await bcrypt.hash(passwordToHash, salt); //encripta a password
 
-
   const user = new User({
     name: req.body.name,
     surname: req.body.surname,
@@ -51,11 +50,11 @@ router.post("/register", async (req, res) => {
   if (missingFields.length > 0) {
     return res
       .status(400)
-      .json({ message: "Please fill all the fields: " +  missingFields });
+      .json({ message: "Please fill all the fields: " + missingFields });
   } else if (!userExists) {
     try {
       const newUser = await user.save();
-      res.status(201).json({message: newUser});
+      res.status(201).json({ message: newUser });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -73,24 +72,25 @@ router.post("/login", async (req, res) => {
     return res.status(400).json({ message: "Invalid email" });
   }
 
-  const passwordToCheck = password + user.created.toISOString(); //concatena a password com a data de criação do user
-  const isMatch = await bcrypt.compare(passwordToCheck, user.password); //compara a password encriptada com a password inserida
+  const passwordToCheck = password + user.created.toISOString();
+  const isMatch = await bcrypt.compare(passwordToCheck, user.password);
 
   if (!isMatch) {
-    return res.status(400).json({ message: "Invalid password" }); //se não for igual, retorna erro
+    return res.status(400).json({ message: "Invalid password" });
   }
 
-  // gera o token
   const secret = process.env.JWT_SECRET;
   const token = jwt.sign({ id: user._id }, secret);
 
-  // guarda o token no documento
   user.token = token;
   user.connected_in = new Date();
   await user.save();
 
-
-  res.status(200).json({ message: "Logged in successfully", token: token, id: user.id, organization: user.organization, department: user.department});
+  res.status(200).json({
+    message: "Logged in successfully",
+    token,
+    user,
+  });
 });
 
 // Logout user
@@ -124,7 +124,7 @@ router.get("/users/:id", verifyToken, async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     } else {
-      return res.status(200).json({message: user});
+      return res.status(200).json({ message: user });
     }
   } catch (err) {
     return res.status(500).json({ message: err.message });

@@ -2,16 +2,7 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
-const mongoose = require("mongoose");
-
-// Definir o modelo do documento Values no MongoDB
-const Values = mongoose.model(
-  "Values",
-  new mongoose.Schema({
-    electricityValue: Number,
-    lastUpdate: Date,
-  })
-);
+const Values = require("../models/valuesModel");
 
 // GET média do preço kWh das empresas de energia em Portugal
 router.get("/", async (req, res) => {

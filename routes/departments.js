@@ -117,10 +117,10 @@ router.delete("/:id", verifyToken, async (req, res) => {
 });
 
 //GET DEPARTMENTS FROM ORGANIZATION X
-router.get("/organization/admin", async (req, res) => {
+router.get("/organization/:id", async (req, res) => {
   try {
  
-    const departments = await Department.find({ organization: user.organization });
+    const departments = await Department.find({ organization: req.params.id });
     res.status(200).json({ message: departments, total: departments.length });
   } catch (err) {
     res.status(500).json({ message: err.message });

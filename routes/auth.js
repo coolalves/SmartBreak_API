@@ -83,7 +83,13 @@ router.post("/login", async (req, res) => {
   const token = jwt.sign({ id: user._id }, secret);
 
   user.token = token;
-  user.connected_in = new Date();
+
+  // Set connected_in Portugal timezone
+  const connectedIn = new Date().toLocaleString("en-US", {
+    timeZone: "Europe/Lisbon",
+  });
+  user.connected_in = connectedIn;
+
   await user.save();
 
   res.status(200).json({

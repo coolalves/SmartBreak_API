@@ -2,6 +2,16 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const cheerio = require("cheerio");
+const mongoose = require("mongoose");
+
+// Definir o modelo do documento Values no MongoDB
+const Values = mongoose.model(
+  "Values",
+  new mongoose.Schema({
+    electricityValue: Number,
+    lastUpdate: Date,
+  })
+);
 
 // GET média do preço kWh das empresas de energia em Portugal
 router.get("/", async (req, res) => {
@@ -36,7 +46,19 @@ router.get("/", async (req, res) => {
     const average = calculateAverage(values);
     console.log("Preço médio:", average);
 
-    res.status(200).json({ "Preço médio": average });
+    // Obter a data e hora atual com o fuso horário de Portugal Continental
+    const lastUpdate = new Date().toLocaleString("en-US", {
+      timeZone: "Europe/Lisbon",
+    });
+
+    // Atualizar o valor da média e o campo lastUpdate na coleção Values do MongoDB
+    await Values.findOneAndUpdate(
+      {},
+      { electricityValue: average, lastUpdate },
+      { upsert: true }
+    );
+
+    res.status(200).json({ average });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

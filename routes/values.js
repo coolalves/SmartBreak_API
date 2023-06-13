@@ -13,10 +13,10 @@ router.get("/", async (req, res) => {
     const html = response.data;
 
     const $ = cheerio.load(html);
-    const tableRows = $("table.table tbody tr");
+    const firstTable = $("table.table").first();
+    const tableRows = firstTable.find("tbody tr");
 
     const values = [];
-    let count = 0; // contador para controlar o número de valores adicionados
 
     tableRows.each((index, element) => {
       const priceValue = $(element).find("td:nth-child(2)").text().trim();
@@ -24,32 +24,32 @@ router.get("/", async (req, res) => {
 
       if (!isNaN(numericValue)) {
         values.push(numericValue);
-        count++;
-
-        if (count === 6) {
-          return false; // interrompe o loop após obter os primeiros 6 valores -> a tabela tem 6 empresas, a restante tabela é relativa ao preço do gás natural
-        }
       }
     });
 
     console.log("Valores:", values);
 
     const average = calculateAverage(values);
-    console.log("Preço médio:", average);
 
-    // Obter a data e hora atual com o fuso horário de Portugal Continental
-    const lastUpdate = new Date().toLocaleString("en-US", {
-      timeZone: "Europe/Lisbon",
-    });
+    if (typeof average !== "number") {
+      res.status(500).json({ message: err.message });
+    } else {
+      console.log("Preço médio:", average);
 
-    // Atualizar o valor da média e o campo lastUpdate na coleção Values do MongoDB
-    await Values.findOneAndUpdate(
-      {},
-      { electricityValue: average, lastUpdate },
-      { upsert: true }
-    );
+      // Obter a data e hora atual com o fuso horário de Portugal Continental
+      const lastUpdate = new Date().toLocaleString("en-US", {
+        timeZone: "Europe/Lisbon",
+      });
 
-    res.status(200).json({ average });
+      // Atualizar o valor da média e o campo lastUpdate na coleção Values do MongoDB
+      await Values.findOneAndUpdate(
+        {},
+        { electricityValue: average, lastUpdate },
+        { upsert: true }
+      );
+
+      res.status(200).json({ average });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

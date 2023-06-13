@@ -5,7 +5,7 @@ const User = require("../models/usersModel");
 const verifyToken = require("../security/verifyToken");
 
 //GET ALL ORGANIZATIONS
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const organizations = await Organization.find();
     res.status(200).json({ message: organizations, total: organizations.length });

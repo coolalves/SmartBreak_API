@@ -5,13 +5,8 @@ const User = require("../models/usersModel");
 const verifyToken = require("../security/verifyToken");
 
 //GET ALL ORGANIZATIONS
-router.get("/", verifyToken, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.findOne({ token: token })
-    if (!user.access)
-      return res.status(403).json({ message: "Cannot access the content" });
     const organizations = await Organization.find();
     res.status(200).json({ message: organizations, total: organizations.length });
   } catch (err) {
@@ -116,7 +111,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
 
     if (user.organization != organization.id)
       return res.status(403).json({ message: "Cannot access the content" });
-      
+
     await Organization.findByIdAndRemove(req.params.id);
     res.status(200).json({ message: "Organization Deleted" });
   } catch (err) {

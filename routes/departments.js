@@ -117,13 +117,9 @@ router.delete("/:id", verifyToken, async (req, res) => {
 });
 
 //GET DEPARTMENTS FROM ORGANIZATION X
-router.get("/organization/admin", verifyToken, async (req, res) => {
+router.get("/organization/admin", async (req, res) => {
   try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.findOne({ token: token })
-    if (!user.admin)
-      return res.status(403).json({ message: "Cannot access the content" });
+ 
     const departments = await Department.find({ organization: user.organization });
     res.status(200).json({ message: departments, total: departments.length });
   } catch (err) {

@@ -21,11 +21,11 @@ router.get("/", verifyToken, async (req, res) => {
 
 //ADD A ORGANIZATION
 router.post("/", verifyToken, async (req, res) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  const user = await User.findOne({ token: token })
-  if (!user.admin)
-    return res.status(403).json({ message: "Cannot access the content" });
+  // const authHeader = req.headers["authorization"];
+  // const token = authHeader && authHeader.split(" ")[1];
+  // const user = await User.findOne({ token: token })
+  // if (!user.admin)
+  //   return res.status(403).json({ message: "Cannot access the content" });
   const organization = new Organization({
     name: req.body.name,
     address: req.body.address,

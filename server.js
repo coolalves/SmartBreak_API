@@ -31,7 +31,9 @@ const devicesRouter = require("./routes/devices.js");
 const routinesRouter = require("./routes/routines.js");
 const authRouter = require("./routes/auth.js");
 const valuesRouter = require("./routes/values.js");
+const emailsRouter = require("./routes/emails.js");
 
+app.use("/emails", emailsRouter)
 app.use("/users", usersRouter);
 app.use("/tips", tipsRouter);
 app.use("/goals", goalsRouter);

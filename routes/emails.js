@@ -4,6 +4,8 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
 const nodemailer = require("nodemailer");
+const bcrypt = require("bcrypt");
+
 
 //GET ALL EMAILS
 router.get("/", async (req, res) => {
@@ -33,6 +35,15 @@ router.post("/recover", async (req, res) => {
     }
     try {
         await transporter.sendMail(mailBody);
+        const user = await User.findOne({ email: req.body.email });
+
+        const salt = await bcrypt.genSalt(12);
+        const passwordToHash = req.body.pass + user.created.toISOString(); //concatena a password com a data de criação do user
+        const passwordHash = await bcrypt.hash(passwordToHash, salt); //encripta a password
+        res.user = user;
+        res.user.password = passwordHash;
+        await res.user.save();
+        
         res.status(200).json({ message: 'Email enviado com sucesso.' });
     } catch (error) {
         res.status(500).json({ message: 'erro' + error });

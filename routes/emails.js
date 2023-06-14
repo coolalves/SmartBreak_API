@@ -34,7 +34,7 @@ router.post("/recover", async (req, res) => {
             await transporter.sendMail(mailBody);
             res.status(200).json({ message: 'Email enviado com sucesso.' });
           } catch (error) {
-            res.status(500).json({ message: err });
+            res.status(500).json({ message: error });
           }
 
     

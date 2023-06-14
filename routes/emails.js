@@ -16,7 +16,6 @@ router.get("/", async (req, res) => {
   });
 
 router.post("/recover", async (req, res) => {
-    try {
         const transporter = nodemailer.createTransport({
             "service" : "gmail",
             "auth" : {
@@ -38,9 +37,7 @@ router.post("/recover", async (req, res) => {
             res.status(500).json({ message: err });
           }
 
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
+    
 })
 
 module.exports = router;

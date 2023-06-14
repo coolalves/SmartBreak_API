@@ -32,15 +32,12 @@ Content-Type: application/json
 
 }
 ###
-POST https://sb-api.herokuapp.com/pauses
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDg1MDYwMn0.IpWR6LiJ7eD1RrGLqlNlPlm5TnAHOFhxpw7-1oykQq4
+POST https://sb-api.herokuapp.com/recover
 Content-Type: application/json
 
 {
-    "start_date" : "2023-03-20T10:00:00.000+00:00",
-    "end_date":  "2023-03-20T10:20:00.000+00:00",
-    "user": "646b7a61cec499ffa20b6e82"
-
+    "email" : "diana.siso.oliveira@gmail.com",
+    "pass" : "xpoifnks23"
 }
 ###
 POST  https://sb-api.herokuapp.com/auth/register

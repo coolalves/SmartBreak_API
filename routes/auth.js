@@ -59,7 +59,7 @@ router.post("/register", async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   } else {
-    return res.status(400).json({ message: "User already exists" });
+    return res.status(400).json({ message: "E-mail já em uso." });
   }
 });
 

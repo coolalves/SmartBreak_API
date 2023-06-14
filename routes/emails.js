@@ -20,13 +20,13 @@ router.post("/recover", async (req, res) => {
     const transporter = nodemailer.createTransport({
         "service": "gmail",
         "auth": {
-            "user": 'smartbreak.ua@gmail.com',
-            "pass": 'vvcmgcqxswxeglbf',
+            "user": process.env.MAIL,
+            "pass": process.env.PASS,
         }
     })
 
     const mailBody = {
-        "from": 'smartbreak.ua@gmail.com',
+        "from": process.env.MAIL,
         "to": req.body.email,
         "subject": "Recuperação de palavra-passe",
         "text": "A tua nova palavra-passe é " + req.body.pass + ". Faz login na aplicação para alterares a informação."

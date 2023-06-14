@@ -32,7 +32,7 @@ router.post("/recover", async (req, res) => {
             "text" : "A tua nova palavra-passe é " + req.body.pass + ". Faz login na aplicação para alterares a informação."
         }
         try {
-            await transporter.sendMail(mailOptions);
+            await transporter.sendMail(mailBody);
             res.status(200).json({ message: 'Email enviado com sucesso.' });
           } catch (error) {
             res.status(500).json({ message: err });

@@ -19,6 +19,17 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
+//GET ALL EMAILS
+router.get("/emails", async (req, res) => {
+  try {
+    const users = await User.find();
+    const emails = users.map(user => user.email);
+    res.status(200).json({ message: emails, total: users.length });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 //GET ONE USER
 router.get("/:id", verifyToken, async (req, res) => {
   try {

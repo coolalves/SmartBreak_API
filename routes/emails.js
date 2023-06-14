@@ -1,4 +1,5 @@
 require("dotenv").config();
+console.log(process.env);
 const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
@@ -34,7 +35,7 @@ router.post("/recover", async (req, res) => {
         await transporter.sendMail(mailBody);
         res.status(200).json({ message: 'Email enviado com sucesso.' });
     } catch (error) {
-        res.status(500).json({ message: 'erro' + process.env.MAIL });
+        res.status(500).json({ message: 'erro' + error });
     }
 
 

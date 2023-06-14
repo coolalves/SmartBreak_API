@@ -32,13 +32,23 @@ Content-Type: application/json
 
 }
 ###
-POST https://sb-api.herokuapp.com/recover
+POST https://sb-api.herokuapp.com/emails/recover
 Content-Type: application/json
 
 {
     "email" : "diana.siso.oliveira@gmail.com",
     "pass" : "xpoifnks23"
 }
+
+###
+POST http://localhost:80/emails/recover
+Content-Type: application/json
+
+{
+    "email" : "diana.siso.oliveira@gmail.com",
+    "pass" : "xpoifnks23"
+}
+
 ###
 POST  https://sb-api.herokuapp.com/auth/register
 Content-Type: application/json

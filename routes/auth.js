@@ -84,18 +84,20 @@ router.post("/login", async (req, res) => {
 
   user.token = token;
 
-  // Set connected_in Portugal timezone
+  // timezone portuguesa
   const connectedIn = new Date().toLocaleString("en-US", {
     timeZone: "Europe/Lisbon",
   });
   user.connected_in = connectedIn;
 
-  await user.save();
+  // procura a organização do user
+  const organization = await Organization.findById(user.organization);
 
   res.status(200).json({
     message: "Logged in successfully",
     token,
     user,
+    organization,
   });
 });
 

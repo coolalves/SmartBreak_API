@@ -1,6 +1,8 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const router = express.Router();
 const User = require("../models/usersModel");
+const Organization = require("../models/organizationsModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("../security/verifyToken");
@@ -46,6 +48,9 @@ router.post("/register", async (req, res) => {
   if (!req.body.department) {
     missingFields.push("department");
   }
+  if (!req.body.organization) {
+    missingFields.push("organization");
+  }
 
   if (missingFields.length > 0) {
     return res
@@ -84,21 +89,33 @@ router.post("/login", async (req, res) => {
 
   user.token = token;
 
-  // timezone portuguesa
+  // Timezone: Europe/Lisbon
   const connectedIn = new Date().toLocaleString("en-US", {
     timeZone: "Europe/Lisbon",
   });
   user.connected_in = connectedIn;
 
-  // procura a organização do user
-  const organization = await Organization.findById(user.organization);
+  console.log(user.organization);
 
-  res.status(200).json({
-    message: "Logged in successfully",
-    token,
-    user,
-    organization,
-  });
+  try {
+    const userOrganization = await Organization.findById(
+      new mongoose.Types.ObjectId(user.organization)
+    );
+
+    if (!userOrganization) {
+      return res.status(404).json({ message: "Organization not found" });
+    }
+
+    res.status(200).json({
+      message: "Logged in successfully",
+      token,
+      user,
+      userOrganization,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 // Logout user

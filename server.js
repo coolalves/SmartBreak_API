@@ -4,6 +4,7 @@ const listEndpoints = require("express-list-endpoints");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true })
@@ -33,7 +34,7 @@ const authRouter = require("./routes/auth.js");
 const valuesRouter = require("./routes/values.js");
 const emailsRouter = require("./routes/emails.js");
 
-app.use("/emails", emailsRouter)
+app.use("/emails", emailsRouter);
 app.use("/users", usersRouter);
 app.use("/tips", tipsRouter);
 app.use("/goals", goalsRouter);
@@ -46,5 +47,16 @@ app.use("/devices", devicesRouter);
 app.use("/routines", routinesRouter);
 app.use("/auth", authRouter);
 app.use("/values", valuesRouter);
+
+//CORS
+app.use(cors()); //podemos transformar isto para apenas aceitar pedidos de um determinado URL
+
+//tipo assim:
+/*
+const corsOptions = {
+  origin: "http://localhost:3000", // substituir pelo domínios que queremos que tenham acesso
+};
+app.use(cors(corsOptions));
+*/
 
 console.log(listEndpoints(app));

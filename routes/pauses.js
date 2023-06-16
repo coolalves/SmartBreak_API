@@ -29,6 +29,7 @@ router.post("/", verifyToken, async (req, res) => {
   const pause = new Pause({
     start_date: req.body.start_date,
     end_date: req.body.end_date,
+    time: req.body.time,
     user: user_id,
   });
   try {
@@ -84,6 +85,9 @@ router.patch("/:id", verifyToken, async (req, res) => {
     }
     if (req.body.user != null) {
       res.pause.user = req.body.user;
+    }
+    if (req.body.time != null) {
+      res.pause.time = req.body.time;
     }
     const updatedPause = await res.pause.save();
     res.status(200).json({ message: updatedPause });

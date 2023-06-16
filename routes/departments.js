@@ -45,9 +45,7 @@ router.get("/:id", verifyToken, async (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     const user = await User.findOne({ token: token })
-    if (!user.admin)
-      return res.status(403).json({ message: "Cannot access the content" });
-
+    
     const department = await Department.findById(req.params.id);
     if (!department)
       return res.status(404).json({ message: "Cannot find department" });
@@ -55,6 +53,15 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (user.organization != department.organization)
       return res.status(403).json({ message: "Cannot access the content" });
 
+    const users = await User.find({})
+    let avg = 0
+    let battery = 0
+    users.forEach((element) => {
+      avg = avg + 1
+      battery = battery + element.battery
+    });
+    console.log(avg, battery)
+      
     res.status(200).json({ message: department });
   } catch (err) {
     res.status(500).json({ message: err.message });

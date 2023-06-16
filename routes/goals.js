@@ -101,18 +101,16 @@ router.get("/organization/:id/inactive", verifyToken, async (req, res) => {
 // GET USER_ID/DEPARTMENT_ID GOALS ACTIVE
 router.get("/destination/:id/active", verifyToken, async (req, res) => {
   try {
-    console.log(req.params.id)
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    console.log(token)
     const user = await User.findOne({ token: token })
-    console.log(user)
 
     if (user.id != req.params.id && user.department != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 
     let goals = [];
     const elements = await Goal.find({ organization: user.organization });
+    
     elements.forEach((element) => {
       if (element.destination.includes(req.params.id) && (element.active))
         goals.push(element);

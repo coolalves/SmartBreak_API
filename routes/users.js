@@ -42,6 +42,10 @@ router.patch("/:id", verifyToken, async (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     user = await User.findOne({ token: token })
+
+    if (!user)
+    return res.status(404).json({ message: "User doesn't exist" });
+
     if (user.id != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 

@@ -97,6 +97,8 @@ router.post("/login", async (req, res) => {
 
   console.log(user.organization);
 
+  await user.save();
+
   try {
     const userOrganization = await Organization.findById(
       new mongoose.Types.ObjectId(user.organization)

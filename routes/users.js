@@ -23,11 +23,13 @@ router.get("/", verifyToken, async (req, res) => {
 //GET ONE USER
 router.get("/:id", verifyToken, async (req, res) => {
   try {
+    console.log(req.params.id)
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.findOne({ token: token })
-    if (user.id != req.params.id)
-      return res.status(403).json({ message: "Cannot access the content" });
+    console.log(token)
+    const user = await User.findOne({ _id: req.params.id })
+    // if (user.id != req.params.id)
+    //   return res.status(403).json({ message: "Cannot access the content" });
 
     res.status(200).json({ message: user });
   } catch (err) {

@@ -18,7 +18,7 @@ mongoose
     console.log(error);
   });
 
-app.use( cors({ origin: "http://localhost:3000", credentials: true, }) );
+  
 app.use(express.json());
 
 const usersRouter = require("./routes/users.js");

@@ -53,16 +53,15 @@ router.get("/:id", verifyToken, async (req, res) => {
     if (user.organization != department.organization)
       return res.status(403).json({ message: "Cannot access the content" });
 
-    const users = await User.find({})
+    const users = await User.find({department : department.id})
     let avg = 0
     let battery = 0
     users.forEach((element) => {
       avg = avg + 1
       battery = battery + element.battery
     });
-    console.log(avg, battery)
       
-    res.status(200).json({ message: department });
+    res.status(200).json({ message: department, battery_dep: (battery/avg).toFixed(0)});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -142,7 +142,7 @@ router.get("/department/:id", verifyToken, async (req, res) => {
   }
 });
 
-router.get("rewards/:user_id", verifyToken, async (req, res) => {
+router.get("/rewards", verifyToken, async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];

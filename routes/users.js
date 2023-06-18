@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
 const Department = require("../models/departmentsModel");
+const Reward = require("../models/rewardsModel");
 
 const verifyToken = require("../security/verifyToken");
 
@@ -140,6 +141,27 @@ router.get("/department/:id", verifyToken, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+router.get("rewards/:user_id", verifyToken, async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token });
+
+    let rewards = []
+    const user_rewards = user.rewards;
+
+    user_rewards.foreach(async (id) => {
+      let reward = await Reward.findById(id);
+      goals.push(reward);
+    })
+
+    res.status(200).json({ message: rewards, total: rewards.length });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+})
 
 
 //GET THE USERS BY PAGE

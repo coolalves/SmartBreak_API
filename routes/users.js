@@ -134,7 +134,8 @@ router.get("/department/:id", verifyToken, async (req, res) => {
     const users = await User.find({ department: req.params.id });
     const department = await Department.findById(req.params.id);
     const department_name = department.name;
-    res.status(200).json({ message: users, total: users.length, department: department_name });
+    const department_description = department.description
+    res.status(200).json({ message: users, total: users.length, department: department_name, description: department_description });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

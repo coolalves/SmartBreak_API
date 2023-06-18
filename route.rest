@@ -41,8 +41,10 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:80/departments/64257588ff893e21d7c5440e
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODlkMzgxNDBmYmZiMTljNDE0MjQ2MiIsImlhdCI6MTY4NjkzODUwN30.PdfcdRdG7-eaCbeFCq81OseQezGx-AVbve3o7h8g04c
+GET http://localhost:80/users/rewards
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODlkMzgxNDBmYmZiMTljNDE0MjQ2MiIsImlhdCI6MTY4NzA5MzU1Nn0.NFZ9zAccMH62lrSHXczrm-jl1aBbT1dB79O0wVVqLbQ
+
+
 ###
 GET http://localhost:80/users/6489d38140fbfb19c4142462
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODlkMzgxNDBmYmZiMTljNDE0MjQ2MiIsImlhdCI6MTY4NjkzNjQxOX0.qCCud2U-2aUQ7w3DyCDfROl23oHnBTiRjRXpqWqKneU

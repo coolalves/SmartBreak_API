@@ -22,6 +22,33 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/rewards", verifyToken, async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token });
+
+    let rewards = []
+    const user_rewards = user.rewards;
+    console.log("rewards" , user_rewards)
+
+    for (const id of user_rewards) {
+      let reward = await getRewards(id);
+      rewards.push(reward);
+    }
+    console.log(rewards)
+    res.status(200).json({ message: rewards, total: rewards.length });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+})
+
+async function getRewards(id) {
+  return await Reward.findById(id)
+}
+
+
 
 //GET ONE USER
 router.get("/:id", verifyToken, async (req, res) => {
@@ -141,28 +168,6 @@ router.get("/department/:id", verifyToken, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-router.get("/rewards", verifyToken, async (req, res) => {
-  try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.findOne({ token: token });
-
-    let rewards = []
-    const user_rewards = user.rewards;
-
-    user_rewards.foreach(async (id) => {
-      let reward = await Reward.findById(id);
-      goals.push(reward);
-    })
-
-    res.status(200).json({ message: rewards, total: rewards.length });
-
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-})
-
 
 //GET THE USERS BY PAGE
 router.get("/department/:id/page/:page", verifyToken, async (req, res) => {

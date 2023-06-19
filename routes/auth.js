@@ -129,7 +129,7 @@ router.post("/password", verifyToken, async(req, res) => {
   const isMatch = await bcrypt.compare(passwordToCheck, user.password);
 
   if (!isMatch) {
-    return res.status(400).json({ message: "Invalid password" });
+    return res.status(400).json({ message: "Insira corretamente a palavra-passe atual." });
   }
 
   const salt = await bcrypt.genSalt(12);

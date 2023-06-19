@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
+const Department = require("../models/departmentsModel");
+const Reward = require("../models/rewardsModel");
+
 const verifyToken = require("../security/verifyToken");
 
 //GET ALL USERS
@@ -19,15 +22,44 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/rewards", verifyToken, async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token });
+
+    let rewards = []
+    const user_rewards = user.rewards;
+    console.log("rewards" , user_rewards)
+
+    for (const id of user_rewards) {
+      let reward = await getRewards(id);
+      rewards.push(reward);
+    }
+    console.log(rewards)
+    res.status(200).json({ message: rewards, total: rewards.length });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+})
+
+async function getRewards(id) {
+  return await Reward.findById(id)
+}
+
+
 
 //GET ONE USER
 router.get("/:id", verifyToken, async (req, res) => {
   try {
+    console.log(req.params.id)
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.findOne({ token: token })
-    if (user.id != req.params.id)
-      return res.status(403).json({ message: "Cannot access the content" });
+    console.log(token)
+    const user = await User.findOne({ _id: req.params.id })
+    // if (user.id != req.params.id)
+    //   return res.status(403).json({ message: "Cannot access the content" });
 
     res.status(200).json({ message: user });
   } catch (err) {
@@ -42,6 +74,10 @@ router.patch("/:id", verifyToken, async (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     user = await User.findOne({ token: token })
+
+    if (!user)
+    return res.status(404).json({ message: "User doesn't exist" });
+
     if (user.id != req.params.id)
       return res.status(403).json({ message: "Cannot access the content" });
 
@@ -124,12 +160,14 @@ router.get("/department/:id", verifyToken, async (req, res) => {
       return res.status(403).json({ message: "Cannot access the content" });
 
     const users = await User.find({ department: req.params.id });
-    res.status(200).json({ message: users, total: users.length });
+    const department = await Department.findById(req.params.id);
+    const department_name = department.name;
+    const department_description = department.description
+    res.status(200).json({ message: users, total: users.length, department: department_name, description: department_description });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-
 
 //GET THE USERS BY PAGE
 router.get("/department/:id/page/:page", verifyToken, async (req, res) => {

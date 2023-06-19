@@ -98,6 +98,8 @@ router.post("/login", async (req, res) => {
 
   console.log(user.organization);
 
+  await user.save();
+
   try {
     const userOrganization = await Organization.findById(
       new mongoose.Types.ObjectId(user.organization)
@@ -127,6 +129,35 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+router.post("/password", verifyToken, async(req, res) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  const user = await User.findOne({ token: token })
+
+  const passwordToCheck = req.body.password + user.created.toISOString();
+  const isMatch = await bcrypt.compare(passwordToCheck, user.password);
+
+  if (!isMatch) {
+    return res.status(400).json({ message: "Insira corretamente a palavra-passe atual." });
+  }
+
+  const salt = await bcrypt.genSalt(12);
+  const passwordToHash = req.body.new_password + user.created.toISOString(); //concatena a password com a data de criação do user
+  const passwordHash = await bcrypt.hash(passwordToHash, salt); //encripta a password
+
+  user.password = passwordHash;
+  await user.save();
+
+  try {
+    await user.save();
+    res.status(201).json({ message: "Password changed."});
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+
+
+})
 
 // Logout user
 router.post("/logout/:id", verifyToken, async (req, res) => {

@@ -18,6 +18,7 @@ mongoose
     console.log(error);
   });
 
+  
 app.use(express.json());
 
 const usersRouter = require("./routes/users.js");

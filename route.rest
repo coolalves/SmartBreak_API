@@ -32,7 +32,7 @@ Content-Type: application/json
 
 }
 ###
-POST https://sb-api.herokuapp.com/emails/recover
+POST https://sb-api.herokuapp.com/
 Content-Type: application/json
 
 {
@@ -41,13 +41,16 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:80/emails/recover
-Content-Type: application/json
+GET http://localhost:80/users/rewards
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODlkMzgxNDBmYmZiMTljNDE0MjQ2MiIsImlhdCI6MTY4NzA5MzU1Nn0.NFZ9zAccMH62lrSHXczrm-jl1aBbT1dB79O0wVVqLbQ
 
-{
-    "email" : "diana.siso.oliveira@gmail.com",
-    "pass" : "xpoifnks23"
-}
+
+###
+GET http://localhost:80/users/6489d38140fbfb19c4142462
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODlkMzgxNDBmYmZiMTljNDE0MjQ2MiIsImlhdCI6MTY4NjkzNjQxOX0.qCCud2U-2aUQ7w3DyCDfROl23oHnBTiRjRXpqWqKneU
+
+###
+GET https://sb-api.herokuapp.com/emails
 
 ###
 POST  https://sb-api.herokuapp.com/auth/register
@@ -64,9 +67,8 @@ Content-Type: application/json
 }
 
 ###
-GET https://sb-api.herokuapp.com/departments/organization
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NmI3YTYxY2VjNDk5ZmZhMjBiNmU4MiIsImlhdCI6MTY4NDg4NTc2Mn0.XPldIFKag1lpcBh7RWOJ5ZJKcK4tkCKjEwkOI5pUuSI
-
+GET https://sb-api.herokuapp.com/organizations/6421b220698e83946dc83fab
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODlkMzgxNDBmYmZiMTljNDE0MjQ2MiIsImlhdCI6MTY4Njc3NTM3NX0.sHL05v6ODJFpvmJ9CVDgxvgehr6yVzpKr0KYQh2ue9E
 
 ###
 PATCH  https://sb-api.herokuapp.com/users/646b7a61cec499ffa20b6e82

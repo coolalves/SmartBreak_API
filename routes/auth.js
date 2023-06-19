@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const router = express.Router();
 const User = require("../models/usersModel");
 const Organization = require("../models/organizationsModel");
+const Department = require("../models/departmentsModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const verifyToken = require("../security/verifyToken");
@@ -106,11 +107,20 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ message: "Organization not found" });
     }
 
+    const userDepartment = await Department.findById(
+      new mongoose.Types.ObjectId(user.department)
+    );
+
+    if (!userDepartment) {
+      return res.status(404).json({ message: "Department not found" });
+    }
+
     res.status(200).json({
       message: "Logged in successfully",
       token,
       user,
       userOrganization,
+      userDepartment,
     });
   } catch (error) {
     console.error(error);

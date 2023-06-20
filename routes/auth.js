@@ -117,7 +117,13 @@ router.post("/login", async (req, res) => {
       return res.status(404).json({ message: "Department not found" });
     }
 
-    res.status(200).json({
+    res.status(200)
+    .header({
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    })
+    .json({
       message: "Logged in successfully",
       token,
       user,

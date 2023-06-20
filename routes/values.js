@@ -5,6 +5,11 @@ const cheerio = require("cheerio");
 const Values = require("../models/valuesModel");
 const cron = require("node-cron");
 
+// Obter a data e hora atual com o fuso horário de Portugal Continental
+const lastUpdate = new Date().toLocaleString("en-US", {
+  timeZone: "Europe/Lisbon",
+});
+
 // Função para obter o novo valor da eletricidade e atualizar a BD
 async function updateElectricityValue() {
   try {
@@ -39,10 +44,6 @@ async function updateElectricityValue() {
 
     console.log("Preço médio:", average);
 
-    // Obter a data e hora atual com o fuso horário de Portugal Continental
-    const lastUpdate = new Date().toLocaleString("en-US", {
-      timeZone: "Europe/Lisbon",
-    });
 
     // Atualizar o valor da média e o campo lastUpdate na coleção Values do MongoDB
     await Values.findOneAndUpdate(
@@ -102,11 +103,6 @@ async function updateFuelValue() {
     const fuelAverage = calculateAverage(values);
 
     console.log("Preço médio:", fuelAverage);
-
-    // Obter a data e hora atual com o fuso horário de Portugal Continental
-    const lastUpdate = new Date().toLocaleString("en-US", {
-      timeZone: "Europe/Lisbon",
-    });
 
     // Atualizar o valor da média e o campo lastUpdate na coleção Values do MongoDB
     await Values.findOneAndUpdate(

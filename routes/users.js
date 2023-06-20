@@ -22,11 +22,11 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/rewards", verifyToken, async (req, res) => {
+router.get("/rewards/:user_id", verifyToken, async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.findOne({ token: token });
+    const user = await User.findById(req.params.user_id);
 
     let rewards = []
     const user_rewards = user.rewards;

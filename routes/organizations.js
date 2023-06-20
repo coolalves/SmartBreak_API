@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 });
 
 //ADD A ORGANIZATION
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", async (req, res) => {
   // const authHeader = req.headers["authorization"];
   // const token = authHeader && authHeader.split(" ")[1];
   // const user = await User.findOne({ token: token })
@@ -25,6 +25,7 @@ router.post("/", verifyToken, async (req, res) => {
     name: req.body.name,
     address: req.body.address,
     phone_number: req.body.phone_number,
+    full : 1000
   });
   try {
     const newOrganization = await organization.save();

@@ -41,6 +41,30 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
+//GET USER ACTIVE DEVICES
+router.get("/active/user", verifyToken, async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    const devices = await Device.find({ user: user.id});
+
+    if (!devices)
+      return res.status(404).json({ message: "Cannot find devices" });
+
+    let energy = 0
+    devices.forEach((element) => {
+      if (element.state) 
+        energy = energy + element.energy;
+    })
+
+    res.status(200).json({ energy_total: energy, message: devices, total: devices.length });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
 //GET A SPECIFIC DEVICE
 router.get("/:id", verifyToken, async (req, res) => {
   try {
@@ -111,33 +135,6 @@ router.get("/user/:id", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "Cannot find devices" });
 
     res.status(200).json({ message: devices, total: devices.length });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-//GET USER DEVICES
-router.get("/active/user/:id", verifyToken, async (req, res) => {
-  try {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    const user = await User.findOne({ token: token })
-
-    if (user.id != req.params.id)
-      return res.status(403).json({ message: "Cannot access the content" });
-
-    const devices = await Device.find({ user: req.params.id });
-
-    if (!devices)
-      return res.status(404).json({ message: "Cannot find devices" });
-
-    let energy = 0
-    devices.forEach((element) => {
-      if (element.state) 
-        energy = energy + element.energy;
-    })
-
-    res.status(200).json({ energy_total: energy, message: devices, total: devices.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

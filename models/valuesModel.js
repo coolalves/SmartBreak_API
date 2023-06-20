@@ -6,6 +6,10 @@ const valuesSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    fuelValue: {
+      type: Number,
+      required: true,
+    },
     lastUpdate: {
       type: Date,
       required: true,

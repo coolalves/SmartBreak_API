@@ -46,29 +46,21 @@ router.get("/active/user", verifyToken, async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+    const devices = await Device.find({ user: user.id});
 
-    const user = await User.findOne({ token: token });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    if (!devices)
+      return res.status(404).json({ message: "Cannot find devices" });
 
-    const devices = await Device.find({ user: user._id });
-    if (!devices || devices.length === 0) {
-      return res.status(404).json({ message: "No devices found" });
-    }
+    let energy = 0
+    devices.forEach((element) => {
+      if (element.state && !isNaN(element.energy)) {
+        energy = energy + element.energy;
+        console.log(energy)
+      }
+    })
 
-    const totalEnergyResult = await Device.aggregate([
-      { $match: { user: user._id, state: true } },
-      { $group: { _id: null, energyTotal: { $sum: "$energy" } } }
-    ]);
-
-    const energyTotal = totalEnergyResult.length > 0 ? totalEnergyResult[0].energyTotal : 0;
-
-    res.status(200).json({
-      energy_total: energyTotal,
-      devices: devices,
-      total: devices.length
-    });
+    res.status(200).json({ energy_total: energy, message: devices, total: devices.length });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

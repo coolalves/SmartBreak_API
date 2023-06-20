@@ -133,7 +133,9 @@ function calculateAverage(values) {
 
 // Agendar a tarefa para ser executada no primeiro dia de cada mês às 00:00
 cron.schedule("0 0 1 * *", updateElectricityValue);
-updateFuelValue();
+
+// Atualiza combustiveis de 15 em 15 dias
+cron.schedule("0 0 */15 * *", updateFuelValue);
 
 // Rota GET para obter o valor atualizado da eletricidade
 router.get("/", async (req, res) => {

@@ -16,7 +16,7 @@ const organizationsSchema = new mongoose.Schema({
   battery_full: {
     type: Number,
     required: false,
-    default: 10000
+    default: 1000
   },
 }, { collection: 'Organizations' });
 

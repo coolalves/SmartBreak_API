@@ -25,7 +25,6 @@ router.post("/", async (req, res) => {
     name: req.body.name,
     address: req.body.address,
     phone_number: req.body.phone_number,
-    full : 1000
   });
   try {
     const newOrganization = await organization.save();

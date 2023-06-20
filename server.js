@@ -6,6 +6,17 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require("cors");
 
+//CORS
+app.use(cors()); //podemos transformar isto para apenas aceitar pedidos de um determinado URL
+
+//tipo assim:
+/*
+const corsOptions = {
+  origin: "http://localhost:3000", // substituir pelo domínios que queremos que tenham acesso
+};
+app.use(cors(corsOptions));
+*/
+
 mongoose
   .connect(process.env.MONGO_URI, { useNewUrlParser: true })
   .then(() => {
@@ -49,15 +60,5 @@ app.use("/routines", routinesRouter);
 app.use("/auth", authRouter);
 app.use("/values", valuesRouter);
 
-//CORS
-app.use(cors()); //podemos transformar isto para apenas aceitar pedidos de um determinado URL
-
-//tipo assim:
-/*
-const corsOptions = {
-  origin: "http://localhost:3000", // substituir pelo domínios que queremos que tenham acesso
-};
-app.use(cors(corsOptions));
-*/
 
 console.log(listEndpoints(app));

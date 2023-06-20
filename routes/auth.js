@@ -118,11 +118,6 @@ router.post("/login", async (req, res) => {
     }
 
     res.status(200)
-    .header({
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    })
     .json({
       message: "Logged in successfully",
       token,

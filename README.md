@@ -18,9 +18,6 @@ For this project, we used React Native, with Redux and Expo extension, for front
 
 ## How to run
 Make sure you have an account in SmartBreak application, only with that condition you can access the data in our API, since it is protected by users tokens.
-You can run our tests with the `$ mocha mocha tests/<name_of_file>.spec.js` command in root folder:
-
-Probably you need run `$npm i` first if you don't have mocha instaled in your device.
 
 ## Authors
 

@@ -140,7 +140,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     const user = await User.findOne({ token: token })
-    if (user.id != req.params.id)
+    if ((user.id != req.params.id) || (!user.admin))
       return res.status(403).json({ message: "Cannot access the content" });
 
     await User.findByIdAndRemove(req.params.id);

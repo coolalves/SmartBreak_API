@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/usersModel");
 const Department = require("../models/departmentsModel");
+const Organization = require("../models/organizationsModel");
 const Reward = require("../models/rewardsModel");
 
 const verifyToken = require("../security/verifyToken");
@@ -168,6 +169,26 @@ router.get("/department/:id", verifyToken, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+//GET USERS FROM A ORGANIZATION
+router.get("/organization/:id", verifyToken, async (req, res) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    const user = await User.findOne({ token: token })
+
+    if (user.organization != req.params.id)
+      return res.status(403).json({ message: "Cannot access the content" });
+
+    const users = await User.find({ organization: req.params.id });
+    const organization = await Organization.findById(req.params.id);
+    const organization_name = organization.name;
+    res.status(200).json({ message: users, total: users.length, organization: organization_name });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 //GET THE USERS BY PAGE
 router.get("/department/:id/page/:page", verifyToken, async (req, res) => {

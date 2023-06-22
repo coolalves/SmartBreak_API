@@ -79,8 +79,8 @@ router.patch("/:id", verifyToken, async (req, res) => {
     if (!user)
     return res.status(404).json({ message: "User doesn't exist" });
 
-    if (user.id != req.params.id)
-      return res.status(403).json({ message: "Cannot access the content" });
+    // if (user.id != req.params.id)
+    //   return res.status(403).json({ message: "Cannot access the content" });
 
     res.user = user;
     if (req.body.name != null) {

@@ -96,6 +96,7 @@ router.patch("/:id", verifyToken, async (req, res) => {
   }
 });
 
+
 //GET USER PAUSES
 router.get("/user/:id", verifyToken, async (req, res) => {
   try {

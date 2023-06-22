@@ -36,17 +36,29 @@ POST https://sb-api.herokuapp.com/auth/login
 Content-Type: application/json
 
 {
-    "email" : "diana.siso.oliveira@gmail.com",
-    "password" : "123123123"
+    "email" : "debugging@smartbreak.pt",
+    "password" : "debugging123"
 }
 
 ###
-GET http://localhost:80/devices/active/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODlkMzgxNDBmYmZiMTljNDE0MjQ2MiIsImlhdCI6MTY4NzI5ODE3M30.p9ZUJQ_T5EyC5SUb8KPdWMT3Qm2ivyLYqkKRPgmyXZE
+GET http://localhost:80/goals/organization/6421b220698e83946dc83fab
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODYxNWY0NzIyODA0YTFjNGIyMzJiNyIsImlhdCI6MTY4NzQzOTk5MH0.7bmUU5VX4stxbeR0OBfoRJ5zndEUGsN7z-gqMXSmd4Q
 
 ###
-GET http://localhost:80/users/6489d38140fbfb19c4142462
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODlkMzgxNDBmYmZiMTljNDE0MjQ2MiIsImlhdCI6MTY4NjkzNjQxOX0.qCCud2U-2aUQ7w3DyCDfROl23oHnBTiRjRXpqWqKneU
+POST http://localhost:80/goals/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODYxNWY0NzIyODA0YTFjNGIyMzJiNyIsImlhdCI6MTY4NzQzOTk5MH0.7bmUU5VX4stxbeR0OBfoRJ5zndEUGsN7z-gqMXSmd4Q
+Content-Type:  application/json
+
+{
+    "description" : "Diminuir a temperatura dos ares condicionados em 3 graus JOANA",
+    "destination" : "6489d38140fbfb19c4142462",
+    "organization" : "6421b220698e83946dc83fab",
+    "priority": 1,
+    "date": "2023-07-30T00:00:00.000Z",
+    "organization" : "6421b220698e83946dc83fab",
+    "types": "Computer" ,
+    "active" : true,
+}
 
 ###
 GET https://sb-api.herokuapp.com/emails

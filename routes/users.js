@@ -74,7 +74,8 @@ router.patch("/:id", verifyToken, async (req, res) => {
     let user;
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    user = await User.findOne({ token: token })
+    // user = await User.findOne({ token: token })
+    user = await User.findById(req.params.id)
 
     if (!user)
     return res.status(404).json({ message: "User doesn't exist" });
